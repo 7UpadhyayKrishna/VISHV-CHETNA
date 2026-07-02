@@ -36,18 +36,18 @@ export default function Lotus3D() {
     mount.appendChild(renderer.domElement)
 
     // === LIGHTS ===
-    const ambient = new THREE.AmbientLight(0xfff0d0, 0.55)
+    const ambient = new THREE.AmbientLight(0xF5F1E8, 0.65)
     scene.add(ambient)
 
-    const key = new THREE.DirectionalLight(0xfff6d8, 1.3)
+    const key = new THREE.DirectionalLight(0xF5E9D0, 1.1)
     key.position.set(5, 8, 4)
     scene.add(key)
 
-    const rim = new THREE.DirectionalLight(0xc8a14a, 0.7)
+    const rim = new THREE.DirectionalLight(0xB8935D, 0.5)
     rim.position.set(-5, 3, -3)
     scene.add(rim)
 
-    const centerLight = new THREE.PointLight(0xf5dc96, 3.0, 8, 2)
+    const centerLight = new THREE.PointLight(0xD4B896, 2.2, 8, 2)
     centerLight.position.set(0, 0.8, 0)
     scene.add(centerLight)
 
@@ -57,21 +57,21 @@ export default function Lotus3D() {
 
     // Petal material (shared)
     const petalMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0xe7c77a,
-      metalness: 0.75,
-      roughness: 0.18,
-      clearcoat: 1.0,
-      clearcoatRoughness: 0.1,
-      emissive: 0x8e6e22,
-      emissiveIntensity: 0.25,
+      color: 0xD4B896,
+      metalness: 0.45,
+      roughness: 0.35,
+      clearcoat: 0.7,
+      clearcoatRoughness: 0.2,
+      emissive: 0xA67C52,
+      emissiveIntensity: 0.15,
     })
     const innerPetalMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0xf5dc96,
-      metalness: 0.6,
-      roughness: 0.2,
-      clearcoat: 1.0,
-      emissive: 0xc8a14a,
-      emissiveIntensity: 0.4,
+      color: 0xE6C896,
+      metalness: 0.4,
+      roughness: 0.3,
+      clearcoat: 0.8,
+      emissive: 0xB8935D,
+      emissiveIntensity: 0.2,
     })
 
     const makePetalGeometry = () => new THREE.SphereGeometry(1, 24, 24)
@@ -117,12 +117,12 @@ export default function Lotus3D() {
 
     // Center pistil (glowing sphere)
     const pistilMat = new THREE.MeshPhysicalMaterial({
-      color: 0xfff6d8,
-      metalness: 0.4,
-      roughness: 0.2,
-      emissive: 0xf5dc96,
-      emissiveIntensity: 1.0,
-      clearcoat: 1.0,
+      color: 0xF5E9D0,
+      metalness: 0.3,
+      roughness: 0.3,
+      emissive: 0xE6C896,
+      emissiveIntensity: 0.6,
+      clearcoat: 0.9,
     })
     const pistil = new THREE.Mesh(new THREE.SphereGeometry(0.36, 32, 32), pistilMat)
     pistil.position.set(0, 0.6, 0)
@@ -130,11 +130,11 @@ export default function Lotus3D() {
 
     // Golden base ring
     const ringMat = new THREE.MeshStandardMaterial({
-      color: 0xc8a14a,
-      metalness: 0.95,
-      roughness: 0.25,
-      emissive: 0x8e6e22,
-      emissiveIntensity: 0.3,
+      color: 0xB8935D,
+      metalness: 0.85,
+      roughness: 0.35,
+      emissive: 0xA67C52,
+      emissiveIntensity: 0.2,
     })
     const ring = new THREE.Mesh(new THREE.TorusGeometry(1.95, 0.08, 12, 64), ringMat)
     ring.rotation.x = Math.PI / 2
@@ -145,9 +145,9 @@ export default function Lotus3D() {
     const particleGroup = new THREE.Group()
     scene.add(particleGroup)
     const particleGeometry = new THREE.SphereGeometry(0.04, 8, 8)
-    const particleMaterial = new THREE.MeshBasicMaterial({ color: 0xf5dc96 })
+    const particleMaterial = new THREE.MeshBasicMaterial({ color: 0xD4B896 })
     const particles = []
-    for (let i = 0; i < 45; i++) {
+    for (let i = 0; i < 35; i++) {
       const angle = Math.random() * Math.PI * 2
       const r = 3.0 + Math.random() * 0.8
       const y = (Math.random() - 0.5) * 2.6
@@ -248,8 +248,8 @@ export default function Lotus3D() {
       <div
         className="absolute inset-8 rounded-full pointer-events-none"
         style={{
-          background: 'radial-gradient(circle, rgba(200,161,74,0.35) 0%, rgba(200,161,74,0) 65%)',
-          filter: 'blur(20px)',
+          background: 'radial-gradient(circle, rgba(212,184,150,0.25) 0%, rgba(212,184,150,0) 65%)',
+          filter: 'blur(16px)',
         }}
       />
       <div ref={mountRef} className="relative w-full h-full" />
