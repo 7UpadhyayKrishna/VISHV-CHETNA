@@ -823,7 +823,7 @@ function ProgramCard({ title, tag, desc, img, icon: Icon, slug }) {
         onMouseMove={onMove}
         onMouseLeave={reset}
         style={{ transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)` }}
-        className="group relative rounded-3xl overflow-hidden glass-dark border border-gold/15 hover:border-gold/50 transition-all duration-500 hover:-translate-y-2 hover:glow-gold cursor-pointer"
+        className="group relative rounded-3xl overflow-hidden border border-gold/30 hover:border-gold/60 transition-all duration-500 hover:-translate-y-2 shadow-xl hover:shadow-2xl cursor-pointer bg-earth-dark"
       >
         <div className="relative h-64 overflow-hidden">
           <motion.img
@@ -833,28 +833,29 @@ function ProgramCard({ title, tag, desc, img, icon: Icon, slug }) {
             whileHover={{ scale: 1.15 }}
             transition={{ duration: 1.2, ease: 'easeOut' }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/40 to-transparent" />
-          <div className="absolute top-4 left-4 glass-gold px-3 py-1 rounded-full text-[10px] tracking-widest text-gold uppercase">
+          {/* Darker gradient overlay for better text visibility */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/40" />
+          <div className="absolute top-4 left-4 px-4 py-1.5 rounded-full text-[10px] tracking-widest text-gold uppercase font-semibold backdrop-blur-sm bg-black/40 border border-gold/30">
             {tag}
           </div>
           <motion.div
             whileHover={{ rotate: 360, scale: 1.1 }}
             transition={{ duration: 0.8 }}
-            className="absolute bottom-4 right-4 w-12 h-12 rounded-full gold-gradient flex items-center justify-center text-navy shadow-lg"
+            className="absolute bottom-4 right-4 w-12 h-12 rounded-full gold-gradient flex items-center justify-center text-white shadow-lg"
           >
             <Icon className="w-5 h-5" />
           </motion.div>
         </div>
-        <div className="p-6">
-          <h3 className="font-display text-xl text-white tracking-wider mb-2">{title}</h3>
-          <p className="font-serif-lux text-white/70 leading-relaxed text-[17px]">{desc}</p>
-          <div className="mt-5 flex items-center gap-2 text-gold text-sm font-medium cursor-pointer group/btn">
+        <div className="p-6 bg-gradient-to-b from-earth-dark/95 to-black/95">
+          <h3 className="font-display text-xl text-white tracking-wider mb-3 drop-shadow-md font-semibold">{title}</h3>
+          <p className="font-serif-lux text-white/95 leading-relaxed text-[17px] drop-shadow-sm mb-2">{desc}</p>
+          <div className="mt-5 flex items-center gap-2 text-gold text-sm font-semibold cursor-pointer group/btn">
             Learn More
             <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
           </div>
         </div>
         <div className="absolute inset-0 rounded-3xl pointer-events-none opacity-0 group-hover:opacity-100 transition"
-          style={{ background: 'radial-gradient(circle at var(--x,50%) var(--y,50%), rgba(200,161,74,0.15), transparent 40%)' }} />
+          style={{ background: 'radial-gradient(circle at var(--x,50%) var(--y,50%), rgba(184,147,93,0.2), transparent 40%)' }} />
       </motion.div>
     </a>
   )
