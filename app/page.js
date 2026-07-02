@@ -25,7 +25,7 @@ const ChakraWheel = dynamic(() => import('@/components/ChakraWheel'), { ssr: fal
 
 // ============ IMAGE ASSETS ============
 const IMG = {
-  logo: 'https://customer-assets.emergentagent.com/job_divine-experience-4/artifacts/vvf2uol0_ChatGPT%20Image%20Jul%202%2C%202026%2C%2006_21_52%20AM.png',
+  logo: 'https://weighbridge-management-system.s3.ap-south-1.amazonaws.com/vct.png',
   logoVideo: 'https://customer-assets.emergentagent.com/job_divine-experience-4/artifacts/ke248diu_logo-animation.mp4',
   heroVideo: 'https://videos.pexels.com/video-files/4058466/4058466-uhd_2560_1440_24fps.mp4',
   hero1: 'https://images.pexels.com/photos/30778937/pexels-photo-30778937.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=1200&w=1920',
