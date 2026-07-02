@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
+import dynamic from 'next/dynamic'
 import {
   motion,
   useScroll,
@@ -18,6 +19,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
+
+// Dynamic 3D + interactive imports (SSR-safe)
+const Lotus3D = dynamic(() => import('@/components/Lotus3D'), { ssr: false, loading: () => <div className="w-full aspect-square" /> })
+const ChakraWheel = dynamic(() => import('@/components/ChakraWheel'), { ssr: false })
 
 // ============ IMAGE ASSETS ============
 const IMG = {
@@ -206,6 +211,7 @@ function Navigation() {
   const links = [
     { label: 'About', href: '#about' },
     { label: 'Programs', href: '#programs' },
+    { label: 'Chakras', href: '#chakras' },
     { label: 'Journey', href: '#journey' },
     { label: 'Meditate', href: '#meditate' },
     { label: 'Gallery', href: '#gallery' },
@@ -788,63 +794,9 @@ function LotusSection() {
 
         <motion.div
           style={{ rotate }}
-          className="relative aspect-square max-w-[520px] mx-auto"
+          className="relative w-full aspect-square max-w-[560px] mx-auto"
         >
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
-            className="absolute inset-0"
-            style={{ transform: `translate3d(${mouse.x}px, ${mouse.y}px, 0)` }}
-          >
-            <svg viewBox="0 0 400 400" className="w-full h-full drop-shadow-[0_0_50px_rgba(200,161,74,0.6)]">
-              <defs>
-                <radialGradient id="petalGold" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="#F5DC96" stopOpacity="0.9" />
-                  <stop offset="70%" stopColor="#C8A14A" stopOpacity="0.7" />
-                  <stop offset="100%" stopColor="#8E6E22" stopOpacity="0.4" />
-                </radialGradient>
-                <radialGradient id="centerGold" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stopColor="#FFF6D8" />
-                  <stop offset="100%" stopColor="#C8A14A" />
-                </radialGradient>
-              </defs>
-              {/* Outer petals */}
-              {[...Array(12)].map((_, i) => (
-                <g key={`o-${i}`} transform={`rotate(${i * 30} 200 200)`}>
-                  <ellipse cx="200" cy="90" rx="22" ry="90" fill="url(#petalGold)" opacity="0.75" />
-                </g>
-              ))}
-              {/* Middle petals */}
-              {[...Array(10)].map((_, i) => (
-                <g key={`m-${i}`} transform={`rotate(${i * 36 + 18} 200 200)`}>
-                  <ellipse cx="200" cy="120" rx="18" ry="70" fill="url(#petalGold)" opacity="0.9" />
-                </g>
-              ))}
-              {/* Inner petals */}
-              {[...Array(8)].map((_, i) => (
-                <g key={`i-${i}`} transform={`rotate(${i * 45 + 22} 200 200)`}>
-                  <ellipse cx="200" cy="150" rx="14" ry="50" fill="url(#petalGold)" />
-                </g>
-              ))}
-              <circle cx="200" cy="200" r="32" fill="url(#centerGold)" />
-              <circle cx="200" cy="200" r="18" fill="#FFF6D8" opacity="0.9" />
-            </svg>
-          </motion.div>
-
-          {/* Floating orbit particles */}
-          <motion.div
-            animate={{ rotate: -360 }}
-            transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-            className="absolute inset-0"
-          >
-            {[...Array(8)].map((_, i) => (
-              <div key={i} className="absolute top-1/2 left-1/2 w-2 h-2 rounded-full bg-gold-light"
-                style={{
-                  transform: `rotate(${i * 45}deg) translateX(220px)`,
-                  boxShadow: '0 0 12px rgba(245,220,150,0.9)',
-                }} />
-            ))}
-          </motion.div>
+          <Lotus3D />
         </motion.div>
       </div>
     </section>
@@ -1620,6 +1572,74 @@ function App() {
     if (typeof document !== 'undefined') document.body.style.overflow = loading ? 'hidden' : ''
   }, [loading])
 
+  // GSAP ScrollTrigger — cinematic scroll-linked animations, synced with Lenis
+  useEffect(() => {
+    if (loading) return
+    let ctx
+    let cleanup = () => {}
+    ;(async () => {
+      const gsapMod = await import('gsap')
+      const stMod = await import('gsap/ScrollTrigger')
+      const gsap = gsapMod.default || gsapMod.gsap
+      const ScrollTrigger = stMod.ScrollTrigger || stMod.default
+      gsap.registerPlugin(ScrollTrigger)
+
+      // Sync ScrollTrigger with Lenis so pinned/scrubbed animations use the smooth-scroll position
+      const lenis = window.__lenis
+      if (lenis) {
+        lenis.on('scroll', ScrollTrigger.update)
+      }
+
+      ctx = gsap.context(() => {
+        // Cinematic fade-and-lift reveal on all H2 headings (preserves gradient text)
+        gsap.utils.toArray('section h2.font-display').forEach((h) => {
+          gsap.fromTo(h,
+            { opacity: 0, y: 60, filter: 'blur(6px)' },
+            {
+              opacity: 1, y: 0, filter: 'blur(0px)',
+              duration: 1.4, ease: 'power4.out',
+              scrollTrigger: {
+                trigger: h,
+                start: 'top 88%',
+                toggleActions: 'play none none reverse',
+              },
+            })
+        })
+
+        // Section eyebrows — slide in from left
+        gsap.utils.toArray('section .inline-flex').forEach((el) => {
+          if (!el.querySelector('.tracking-\\[0\\.35em\\]')) return
+          gsap.fromTo(el,
+            { opacity: 0, x: -40 },
+            {
+              opacity: 1, x: 0, duration: 1, ease: 'power3.out',
+              scrollTrigger: { trigger: el, start: 'top 90%' },
+            })
+        })
+
+        // Parallax float-in for opt-in cards
+        gsap.utils.toArray('[data-parallax]').forEach((el) => {
+          gsap.fromTo(el,
+            { y: 80, opacity: 0 },
+            {
+              y: 0, opacity: 1, duration: 1.2, ease: 'power3.out',
+              scrollTrigger: { trigger: el, start: 'top 90%' },
+            })
+        })
+
+        // Refresh ScrollTrigger after fonts/images load
+        setTimeout(() => ScrollTrigger.refresh(), 400)
+      })
+
+      cleanup = () => {
+        if (lenis) lenis.off('scroll', ScrollTrigger.update)
+        ctx && ctx.revert()
+      }
+    })()
+
+    return () => cleanup()
+  }, [loading])
+
   return (
     <main className="relative bg-warmwhite text-navy min-h-screen">
       <AnimatePresence>{loading && <Loader onDone={() => setLoading(false)} />}</AnimatePresence>
@@ -1630,6 +1650,7 @@ function App() {
       <About />
       <Programs />
       <LotusSection />
+      <ChakraWheel />
       <Stats />
       <Timeline />
       <Meditate />

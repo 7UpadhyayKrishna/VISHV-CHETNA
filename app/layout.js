@@ -1,5 +1,6 @@
 import { Inter, Cinzel, Cormorant_Garamond } from 'next/font/google'
 import { Toaster } from '@/components/ui/sonner'
+import SmoothScroll from '@/components/SmoothScroll'
 import './globals.css'
 
 const inter = Inter({
@@ -42,7 +43,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${inter.variable} ${cinzel.variable} ${cormorant.variable}`} suppressHydrationWarning>
       <body className="font-body antialiased">
-        {children}
+        <SmoothScroll>{children}</SmoothScroll>
         <Toaster position="top-center" theme="dark" richColors />
       </body>
     </html>
