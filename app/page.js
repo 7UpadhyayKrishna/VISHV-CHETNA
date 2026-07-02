@@ -416,7 +416,7 @@ function Hero() {
         >
           <span className="h-px w-12 bg-gradient-to-r from-transparent to-gold" />
           <Sparkles className="w-3.5 h-3.5 text-gold" />
-          <span className="text-[11px] tracking-[0.5em] text-gold-light font-medium uppercase">The Enlightened World</span>
+          <span className="text-[11px] tracking-[0.5em] text-white font-semibold uppercase drop-shadow-lg">The Enlightened World</span>
           <Sparkles className="w-3.5 h-3.5 text-gold" />
           <span className="h-px w-12 bg-gradient-to-l from-transparent to-gold" />
         </motion.div>
@@ -428,21 +428,21 @@ function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.9, duration: 1.4, ease: [0.2, 0.8, 0.2, 1] }}
             className="font-display leading-[0.9] text-white tracking-tight mx-auto"
-            style={{ textShadow: '0 2px 30px rgba(0,0,0,0.5)' }}
+            style={{ textShadow: '0 4px 40px rgba(0,0,0,0.7), 0 2px 20px rgba(0,0,0,0.5)' }}
           >
             <span className="block" style={{ fontSize: 'clamp(3rem, 11vw, 10rem)', letterSpacing: '0.02em' }}>
               AWAKEN
             </span>
-            <span className="block font-serif-lux italic font-light gold-shimmer mt-2"
-              style={{ fontSize: 'clamp(2rem, 7vw, 6.5rem)' }}>
+            <span className="block font-serif-lux italic font-normal text-white drop-shadow-2xl mt-2"
+              style={{ fontSize: 'clamp(2rem, 7vw, 6.5rem)', textShadow: '0 4px 30px rgba(0,0,0,0.8), 0 2px 15px rgba(0,0,0,0.6)' }}>
               your inner
             </span>
             <motion.span
               initial={{ opacity: 0, scale: 0.92 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 1.5, duration: 1.6, ease: [0.2, 0.8, 0.2, 1] }}
-              className="block font-display font-bold gold-text mt-1 leading-none"
-              style={{ fontSize: 'clamp(2.2rem, 8vw, 8rem)', letterSpacing: '-0.02em' }}
+              className="block font-display font-bold text-gold drop-shadow-2xl mt-1 leading-none"
+              style={{ fontSize: 'clamp(2.2rem, 8vw, 8rem)', letterSpacing: '-0.02em', textShadow: '0 4px 30px rgba(0,0,0,0.7), 0 2px 15px rgba(184,147,93,0.5)' }}
             >
               CONSCIOUSNESS
             </motion.span>
@@ -524,8 +524,8 @@ function Hero() {
         transition={{ delay: 3, duration: 1 }}
         className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20"
       >
-        <div className="flex flex-col items-center gap-2 text-white/70">
-          <span className="text-[10px] tracking-[0.4em]">SCROLL</span>
+        <div className="flex flex-col items-center gap-2 text-white drop-shadow-lg">
+          <span className="text-[10px] tracking-[0.4em] font-semibold">SCROLL</span>
           <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
             <ChevronDown className="w-4 h-4" />
           </motion.div>
