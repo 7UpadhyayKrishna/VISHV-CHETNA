@@ -10,7 +10,6 @@ export default function Lotus3D() {
     const mount = mountRef.current
     if (!mount) return
 
-    // Ensure we have a real size (aspect-square may not compute on first paint)
     const getSize = () => {
       const w = mount.clientWidth || mount.getBoundingClientRect().width || 500
       const h = mount.clientHeight || mount.getBoundingClientRect().height || w
@@ -23,8 +22,8 @@ export default function Lotus3D() {
 
     // === CAMERA ===
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100)
-    camera.position.set(0, 2.6, 5.5)
-    camera.lookAt(0, 0.2, 0)
+    camera.position.set(0, 3.5, 6)
+    camera.lookAt(0, 0, 0)
 
     // === RENDERER ===
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
@@ -32,22 +31,22 @@ export default function Lotus3D() {
     renderer.setSize(width, height)
     renderer.setClearColor(0x000000, 0)
     renderer.toneMapping = THREE.ACESFilmicToneMapping
-    renderer.toneMappingExposure = 1.15
+    renderer.toneMappingExposure = 1.1
     mount.appendChild(renderer.domElement)
 
     // === LIGHTS ===
-    const ambient = new THREE.AmbientLight(0xF5F1E8, 0.65)
+    const ambient = new THREE.AmbientLight(0xF5F1E8, 0.7)
     scene.add(ambient)
 
-    const key = new THREE.DirectionalLight(0xF5E9D0, 1.1)
+    const key = new THREE.DirectionalLight(0xF5E9D0, 1.0)
     key.position.set(5, 8, 4)
     scene.add(key)
 
-    const rim = new THREE.DirectionalLight(0xB8935D, 0.5)
+    const rim = new THREE.DirectionalLight(0xD4B896, 0.4)
     rim.position.set(-5, 3, -3)
     scene.add(rim)
 
-    const centerLight = new THREE.PointLight(0xD4B896, 2.2, 8, 2)
+    const centerLight = new THREE.PointLight(0xE6C896, 2.0, 8, 2)
     centerLight.position.set(0, 0.8, 0)
     scene.add(centerLight)
 
@@ -55,105 +54,163 @@ export default function Lotus3D() {
     const lotus = new THREE.Group()
     scene.add(lotus)
 
-    // Petal material (shared)
+    // Petal material
     const petalMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0xD4B896,
-      metalness: 0.45,
-      roughness: 0.35,
-      clearcoat: 0.7,
-      clearcoatRoughness: 0.2,
-      emissive: 0xA67C52,
-      emissiveIntensity: 0.15,
-    })
-    const innerPetalMaterial = new THREE.MeshPhysicalMaterial({
       color: 0xE6C896,
-      metalness: 0.4,
-      roughness: 0.3,
-      clearcoat: 0.8,
+      metalness: 0.2,
+      roughness: 0.5,
+      clearcoat: 0.5,
+      clearcoatRoughness: 0.3,
       emissive: 0xB8935D,
-      emissiveIntensity: 0.2,
+      emissiveIntensity: 0.1,
+      side: THREE.DoubleSide,
+    })
+    
+    const innerPetalMaterial = new THREE.MeshPhysicalMaterial({
+      color: 0xF5E9D0,
+      metalness: 0.15,
+      roughness: 0.4,
+      clearcoat: 0.6,
+      emissive: 0xD4B896,
+      emissiveIntensity: 0.15,
+      side: THREE.DoubleSide,
     })
 
-    const makePetalGeometry = () => new THREE.SphereGeometry(1, 24, 24)
+    // Create realistic lotus petal shape
+    const createLotusPetal = (width, length, curve = 0.8) => {
+      const shape = new THREE.Shape()
+      
+      // Draw petal outline (teardrop/ellipse shape)
+      shape.moveTo(0, 0)
+      shape.bezierCurveTo(
+        width * 0.6, length * 0.2,
+        width * 0.8, length * 0.6,
+        width * 0.3, length
+      )
+      shape.bezierCurveTo(
+        0, length * 0.9,
+        -width * 0.3, length,
+        -width * 0.8, length * 0.6
+      )
+      shape.bezierCurveTo(
+        -width * 0.6, length * 0.2,
+        -width * 0.4, 0,
+        0, 0
+      )
 
-    // Layer 1 — outer petals (12)
+      const geometry = new THREE.ExtrudeGeometry(shape, {
+        depth: 0.02,
+        bevelEnabled: true,
+        bevelThickness: 0.05,
+        bevelSize: 0.03,
+        bevelSegments: 3,
+        curveSegments: 24,
+      })
+
+      return geometry
+    }
+
+    // Layer 1 - Outer petals (16)
+    for (let i = 0; i < 16; i++) {
+      const angle = (i / 16) * Math.PI * 2
+      const petal = new THREE.Mesh(createLotusPetal(0.4, 1.2), petalMaterial)
+      
+      const r = 1.4
+      petal.position.set(Math.cos(angle) * r, -0.3, Math.sin(angle) * r)
+      
+      // Rotate petal to face outward and curve upward
+      petal.rotation.x = Math.PI / 3
+      petal.rotation.z = -angle
+      petal.rotation.y = Math.PI / 8
+      
+      petal.userData = { baseY: petal.position.y, phase: i * 0.3 }
+      lotus.add(petal)
+    }
+
+    // Layer 2 - Middle petals (12)
     for (let i = 0; i < 12; i++) {
-      const angle = (i / 12) * Math.PI * 2
-      const r = 1.65
-      const petal = new THREE.Mesh(makePetalGeometry(), petalMaterial)
-      petal.position.set(Math.cos(angle) * r, -0.15, Math.sin(angle) * r)
-      petal.scale.set(0.35, 1.2, 0.15)
-      // Rotate so the tip faces up-outward
-      petal.rotation.z = Math.PI / 2 - angle // splay outward
-      petal.rotation.x = Math.PI / 2
-      petal.lookAt(Math.cos(angle) * r * 2.5, 0.8, Math.sin(angle) * r * 2.5)
-      petal.userData = { baseY: petal.position.y, phase: i * 0.4 }
+      const angle = (i / 12) * Math.PI * 2 + Math.PI / 12
+      const petal = new THREE.Mesh(createLotusPetal(0.35, 1.0), petalMaterial)
+      
+      const r = 0.9
+      petal.position.set(Math.cos(angle) * r, 0.1, Math.sin(angle) * r)
+      
+      petal.rotation.x = Math.PI / 4
+      petal.rotation.z = -angle
+      petal.rotation.y = Math.PI / 6
+      
+      petal.userData = { baseY: petal.position.y, phase: i * 0.25 + 0.5 }
       lotus.add(petal)
     }
 
-    // Layer 2 — middle petals (10)
-    for (let i = 0; i < 10; i++) {
-      const angle = (i / 10) * Math.PI * 2 + Math.PI / 10
-      const r = 1.15
-      const petal = new THREE.Mesh(makePetalGeometry(), petalMaterial)
-      petal.position.set(Math.cos(angle) * r, 0.15, Math.sin(angle) * r)
-      petal.scale.set(0.32, 1.05, 0.13)
-      petal.lookAt(Math.cos(angle) * r * 2.5, 1.0, Math.sin(angle) * r * 2.5)
-      petal.userData = { baseY: petal.position.y, phase: i * 0.35 + 0.5 }
-      lotus.add(petal)
-    }
-
-    // Layer 3 — inner petals (8)
+    // Layer 3 - Inner petals (8)
     for (let i = 0; i < 8; i++) {
       const angle = (i / 8) * Math.PI * 2 + Math.PI / 8
-      const r = 0.65
-      const petal = new THREE.Mesh(makePetalGeometry(), innerPetalMaterial)
+      const petal = new THREE.Mesh(createLotusPetal(0.3, 0.7), innerPetalMaterial)
+      
+      const r = 0.5
       petal.position.set(Math.cos(angle) * r, 0.4, Math.sin(angle) * r)
-      petal.scale.set(0.28, 0.8, 0.12)
-      petal.lookAt(Math.cos(angle) * r * 2.5, 1.5, Math.sin(angle) * r * 2.5)
-      petal.userData = { baseY: petal.position.y, phase: i * 0.3 + 1.0 }
+      
+      petal.rotation.x = Math.PI / 6
+      petal.rotation.z = -angle
+      petal.rotation.y = Math.PI / 5
+      
+      petal.userData = { baseY: petal.position.y, phase: i * 0.2 + 1.0 }
       lotus.add(petal)
     }
 
-    // Center pistil (glowing sphere)
+    // Center pistil (stamens cluster)
+    const pistilGeometry = new THREE.CylinderGeometry(0.08, 0.1, 0.4, 16)
     const pistilMat = new THREE.MeshPhysicalMaterial({
-      color: 0xF5E9D0,
-      metalness: 0.3,
-      roughness: 0.3,
+      color: 0xF5DC96,
+      metalness: 0.2,
+      roughness: 0.4,
       emissive: 0xE6C896,
-      emissiveIntensity: 0.6,
-      clearcoat: 0.9,
+      emissiveIntensity: 0.5,
     })
-    const pistil = new THREE.Mesh(new THREE.SphereGeometry(0.36, 32, 32), pistilMat)
-    pistil.position.set(0, 0.6, 0)
-    lotus.add(pistil)
+    
+    for (let i = 0; i < 20; i++) {
+      const stamen = new THREE.Mesh(pistilGeometry, pistilMat)
+      const angle = (i / 20) * Math.PI * 2
+      const r = 0.15 + Math.random() * 0.1
+      stamen.position.set(
+        Math.cos(angle) * r,
+        0.6 + Math.random() * 0.15,
+        Math.sin(angle) * r
+      )
+      stamen.rotation.x = (Math.random() - 0.5) * 0.2
+      stamen.rotation.z = (Math.random() - 0.5) * 0.2
+      lotus.add(stamen)
+    }
 
-    // Golden base ring
-    const ringMat = new THREE.MeshStandardMaterial({
-      color: 0xB8935D,
-      metalness: 0.85,
-      roughness: 0.35,
-      emissive: 0xA67C52,
-      emissiveIntensity: 0.2,
-    })
-    const ring = new THREE.Mesh(new THREE.TorusGeometry(1.95, 0.08, 12, 64), ringMat)
-    ring.rotation.x = Math.PI / 2
-    ring.position.y = -0.5
-    lotus.add(ring)
+    // Center stigma
+    const stigma = new THREE.Mesh(
+      new THREE.SphereGeometry(0.25, 32, 32),
+      new THREE.MeshPhysicalMaterial({
+        color: 0xE6C896,
+        metalness: 0.3,
+        roughness: 0.3,
+        emissive: 0xD4B896,
+        emissiveIntensity: 0.6,
+      })
+    )
+    stigma.position.y = 0.6
+    lotus.add(stigma)
 
-    // === ORBIT PARTICLES ===
+    // === SUBTLE PARTICLES ===
     const particleGroup = new THREE.Group()
     scene.add(particleGroup)
-    const particleGeometry = new THREE.SphereGeometry(0.04, 8, 8)
+    const particleGeometry = new THREE.SphereGeometry(0.03, 6, 6)
     const particleMaterial = new THREE.MeshBasicMaterial({ color: 0xD4B896 })
     const particles = []
-    for (let i = 0; i < 35; i++) {
+    
+    for (let i = 0; i < 20; i++) {
       const angle = Math.random() * Math.PI * 2
-      const r = 3.0 + Math.random() * 0.8
-      const y = (Math.random() - 0.5) * 2.6
+      const r = 2.5 + Math.random() * 0.6
+      const y = (Math.random() - 0.5) * 2.0
       const p = new THREE.Mesh(particleGeometry, particleMaterial)
       p.position.set(Math.cos(angle) * r, y, Math.sin(angle) * r)
-      p.userData = { angle, radius: r, y, speed: 0.2 + Math.random() * 0.4, size: 0.5 + Math.random() * 1.5 }
+      p.userData = { angle, radius: r, y, speed: 0.15 + Math.random() * 0.3, size: 0.6 + Math.random() * 1.2 }
       p.scale.setScalar(p.userData.size)
       particleGroup.add(p)
       particles.push(p)
@@ -178,41 +235,42 @@ export default function Lotus3D() {
     }
     const ro = new ResizeObserver(onResize)
     ro.observe(mount)
-    // Also trigger a resize on window resize (fallback)
     window.addEventListener('resize', onResize)
-    // Fire a delayed resize to catch layout stabilization
     const initTimer = setTimeout(onResize, 200)
 
     // === ANIMATE ===
     let raf
     const clock = new THREE.Clock()
     let targetRotX = 0, targetRotZ = 0
+    
     const animate = () => {
       const t = clock.getElapsedTime()
-      // Slow auto-spin
-      lotus.rotation.y += 0.004
-      // Mouse-tilt
-      targetRotX = mouseRef.current.y * 0.35
-      targetRotZ = -mouseRef.current.x * 0.35
-      lotus.rotation.x += (targetRotX - lotus.rotation.x) * 0.05
-      lotus.rotation.z += (targetRotZ - lotus.rotation.z) * 0.05
+      
+      // Gentle auto-rotation
+      lotus.rotation.y += 0.003
+      
+      // Mouse tilt
+      targetRotX = mouseRef.current.y * 0.25
+      targetRotZ = -mouseRef.current.x * 0.25
+      lotus.rotation.x += (targetRotX - lotus.rotation.x) * 0.04
+      lotus.rotation.z += (targetRotZ - lotus.rotation.z) * 0.04
 
-      // Gentle bob per petal
+      // Gentle petal movement
       lotus.children.forEach((child) => {
         if (child.userData && child.userData.baseY !== undefined) {
-          child.position.y = child.userData.baseY + Math.sin(t * 1.2 + child.userData.phase) * 0.04
+          child.position.y = child.userData.baseY + Math.sin(t * 0.8 + child.userData.phase) * 0.03
         }
       })
 
-      // Pistil pulse
-      const p = 1 + Math.sin(t * 2) * 0.05
-      pistil.scale.setScalar(p)
-      centerLight.intensity = 2.5 + Math.sin(t * 2) * 0.6
+      // Stigma pulse
+      const pulse = 1 + Math.sin(t * 1.5) * 0.04
+      stigma.scale.setScalar(pulse)
+      centerLight.intensity = 1.8 + Math.sin(t * 1.5) * 0.4
 
       // Orbit particles
-      particleGroup.rotation.y = t * 0.15
+      particleGroup.rotation.y = t * 0.1
       particles.forEach((pt, i) => {
-        pt.position.y = pt.userData.y + Math.sin(t * pt.userData.speed + i) * 0.15
+        pt.position.y = pt.userData.y + Math.sin(t * pt.userData.speed + i) * 0.12
       })
 
       renderer.render(scene, camera)
@@ -244,12 +302,11 @@ export default function Lotus3D() {
 
   return (
     <div className="w-full aspect-square max-w-[560px] mx-auto relative">
-      {/* Halo behind */}
       <div
         className="absolute inset-8 rounded-full pointer-events-none"
         style={{
-          background: 'radial-gradient(circle, rgba(212,184,150,0.25) 0%, rgba(212,184,150,0) 65%)',
-          filter: 'blur(16px)',
+          background: 'radial-gradient(circle, rgba(212,184,150,0.2) 0%, rgba(212,184,150,0) 65%)',
+          filter: 'blur(14px)',
         }}
       />
       <div ref={mountRef} className="relative w-full h-full" />

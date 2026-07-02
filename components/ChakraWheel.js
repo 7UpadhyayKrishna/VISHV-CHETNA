@@ -111,73 +111,82 @@ function ChakraOrb({ chakra, index, active, onClick }) {
       onClick={() => onClick(index)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.97 }}
+      whileHover={{ scale: 1.08 }}
+      whileTap={{ scale: 0.95 }}
       className="relative group focus:outline-none"
       aria-label={chakra.name}
     >
+      {/* Outer glow ring (subtle) */}
       <motion.div
         animate={{
-          scale: active ? [1, 1.15, 1] : 1,
-          opacity: active ? [0.3, 0.5, 0.3] : (isHovered ? 0.4 : 0.2),
+          scale: active ? [1, 1.2, 1] : 1,
+          opacity: active ? [0.25, 0.45, 0.25] : (isHovered ? 0.35 : 0.15),
         }}
         transition={{ duration: 4, repeat: active ? Infinity : 0, ease: 'easeInOut' }}
-        className="absolute inset-0 rounded-full -m-4"
+        className="absolute inset-0 rounded-full -m-3"
         style={{
-          background: `radial-gradient(circle, ${chakra.lightColor}40, transparent 70%)`,
+          background: `radial-gradient(circle, ${chakra.lightColor}50, transparent 70%)`,
+          filter: 'blur(8px)',
         }}
       />
       
+      {/* Main circular orb */}
       <motion.div
         animate={{
-          scale: active ? [1, 1.05, 1] : 1,
+          scale: active ? [1, 1.04, 1] : 1,
         }}
-        transition={{ duration: 3, repeat: active ? Infinity : 0, ease: 'easeInOut' }}
-        className="relative w-16 h-16 md:w-18 md:h-18 rounded-full flex items-center justify-center"
+        transition={{ duration: 3.5, repeat: active ? Infinity : 0, ease: 'easeInOut' }}
+        className="relative w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center cursor-pointer"
         style={{
-          background: `radial-gradient(circle at 35% 35%, ${chakra.lightColor}, ${chakra.color})`,
-          boxShadow: `0 4px 16px ${chakra.color}30, inset 0 2px 8px rgba(255,255,255,0.3)`,
+          background: `radial-gradient(circle at 30% 30%, ${chakra.lightColor}, ${chakra.color})`,
+          boxShadow: `0 6px 20px ${chakra.color}35, inset 0 2px 12px rgba(255,255,255,0.4), inset 0 -2px 8px ${chakra.color}40`,
+          border: `2px solid ${chakra.lightColor}60`,
         }}
       >
         <span 
-          className="font-display text-xl md:text-2xl text-white drop-shadow-sm" 
-          style={{ textShadow: '0 1px 4px rgba(0,0,0,0.3)' }}
+          className="font-display text-2xl md:text-3xl text-white drop-shadow-md" 
+          style={{ textShadow: '0 2px 6px rgba(0,0,0,0.4)' }}
         >
           {chakra.symbol}
         </span>
       </motion.div>
 
+      {/* Rotating petals when active */}
       {active && (
         <motion.div
           initial={{ scale: 0, opacity: 0, rotate: 0 }}
           animate={{ 
-            scale: [0.8, 1, 0.8], 
-            opacity: [0.4, 0.6, 0.4],
-            rotate: [0, 180, 360],
+            scale: [0.85, 1, 0.85], 
+            opacity: [0.3, 0.5, 0.3],
+            rotate: [0, 360],
           }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-          className="absolute inset-0 -m-6 pointer-events-none"
+          transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
+          className="absolute inset-0 -m-8 pointer-events-none"
         >
-          {[...Array(8)].map((_, i) => (
+          {[...Array(12)].map((_, i) => (
             <div
               key={i}
-              className="absolute w-2 h-6 rounded-full"
+              className="absolute w-3 h-8 rounded-full"
               style={{
-                background: `linear-gradient(180deg, ${chakra.lightColor}, transparent)`,
+                background: `linear-gradient(180deg, ${chakra.lightColor}90, transparent)`,
                 left: '50%',
                 top: '50%',
                 transformOrigin: '50% 50%',
-                transform: `translate(-50%, -50%) rotate(${i * 45}deg) translateY(-30px)`,
-                opacity: 0.4,
+                transform: `translate(-50%, -50%) rotate(${i * 30}deg) translateY(-40px)`,
+                opacity: 0.35,
+                filter: 'blur(1px)',
               }}
             />
           ))}
         </motion.div>
       )}
 
-      <div className="absolute left-full ml-5 top-1/2 -translate-y-1/2 whitespace-nowrap hidden md:block opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <div className="font-display text-sm tracking-wider text-earth-dark">{chakra.name}</div>
-        <div className="text-xs tracking-wide text-earth-med uppercase mt-0.5">{chakra.seed}</div>
+      {/* Label on hover */}
+      <div className="absolute left-full ml-6 top-1/2 -translate-y-1/2 whitespace-nowrap hidden md:block opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+        <div className="glass-natural rounded-xl px-4 py-2 shadow-md border border-gold/20">
+          <div className="font-display text-base tracking-wider text-earth-dark font-semibold">{chakra.name}</div>
+          <div className="text-xs tracking-wide text-earth-med uppercase mt-0.5">{chakra.seed} · {chakra.element}</div>
+        </div>
       </div>
     </motion.button>
   )

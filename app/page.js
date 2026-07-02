@@ -252,17 +252,13 @@ function Navigation() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ delay: 0.2, duration: 0.8 }}
       className={`fixed top-0 left-0 right-0 z-[70] transition-all duration-500 ${
-        scrolled ? 'glass-dark py-3 border-b border-gold/20' : 'py-6'
+        scrolled ? 'glass-natural py-3 border-b border-gold/30 shadow-md' : 'py-5 bg-gradient-to-b from-black/40 to-transparent'
       }`}
     >
       <div className="container flex items-center justify-between">
-        <a href="#top" className="flex items-center gap-3 group">
-          <div className="relative w-12 h-12 rounded-full bg-warmwhite p-1.5 shadow-lg group-hover:shadow-[0_0_20px_rgba(200,161,74,0.6)] transition">
-            <img src={IMG.logo} alt="Vishv Chetna Trust" className="w-full h-full object-contain rounded-full" />
-          </div>
-          <div className="leading-tight hidden sm:block">
-            <div className="font-display text-[13px] tracking-[0.25em] text-white">VISHV CHETNA</div>
-            <div className="font-serif-lux italic text-[10px] tracking-widest text-gold">The Enlightened World</div>
+        <a href="#top" className="group">
+          <div className="relative w-16 h-16 rounded-full bg-white p-2 shadow-lg group-hover:shadow-xl transition-all duration-300">
+            <img src={IMG.logo} alt="Vishv Chetna Trust" className="w-full h-full object-contain" />
           </div>
         </a>
 
@@ -271,7 +267,9 @@ function Navigation() {
             <a
               key={l.label}
               href={l.href}
-              className="relative px-4 py-2 text-sm font-body font-medium text-white/85 hover:text-gold transition-colors group"
+              className={`relative px-4 py-2 text-sm font-body font-medium transition-colors group ${
+                scrolled ? 'text-earth-dark hover:text-gold' : 'text-white hover:text-gold'
+              }`}
             >
               {l.label}
               <span className="absolute bottom-0 left-1/2 w-0 h-px bg-gold group-hover:w-6 group-hover:-translate-x-3 transition-all" />
@@ -281,13 +279,13 @@ function Navigation() {
 
         <div className="hidden lg:block">
           <a href="#donate">
-            <Button className="magnetic-btn rounded-full gold-gradient text-navy font-semibold px-6 hover:opacity-90">
+            <Button className="rounded-full gold-gradient text-white font-semibold px-6 shadow-md hover:shadow-lg transition-all">
               <Heart className="w-4 h-4 mr-2" /> Donate
             </Button>
           </a>
         </div>
 
-        <button className="lg:hidden text-white" onClick={() => setOpen(!open)}>
+        <button className={`lg:hidden transition-colors ${scrolled ? 'text-earth-dark' : 'text-white'}`} onClick={() => setOpen(!open)}>
           {open ? <X /> : <Menu />}
         </button>
       </div>
@@ -298,15 +296,15 @@ function Navigation() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="lg:hidden glass-dark border-t border-gold/20"
+            className="lg:hidden glass-natural border-t border-gold/30"
           >
             <div className="container py-6 flex flex-col gap-3">
               {links.map((l) => (
                 <a key={l.label} href={l.href} onClick={() => setOpen(false)}
-                  className="text-white/85 hover:text-gold py-2 font-medium">{l.label}</a>
+                  className="text-earth-dark hover:text-gold py-2 font-medium transition-colors">{l.label}</a>
               ))}
               <a href="#donate" onClick={() => setOpen(false)}>
-                <Button className="w-full rounded-full gold-gradient text-navy font-semibold mt-2">
+                <Button className="w-full rounded-full gold-gradient text-white font-semibold mt-2 shadow-md">
                   <Heart className="w-4 h-4 mr-2" /> Donate
                 </Button>
               </a>
