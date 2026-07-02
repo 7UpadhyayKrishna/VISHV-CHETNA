@@ -26,6 +26,9 @@ const ChakraWheel = dynamic(() => import('@/components/ChakraWheel'), { ssr: fal
 
 // ============ IMAGE ASSETS ============
 const IMG = {
+  logo: 'https://customer-assets.emergentagent.com/job_divine-experience-4/artifacts/vvf2uol0_ChatGPT%20Image%20Jul%202%2C%202026%2C%2006_21_52%20AM.png',
+  logoVideo: 'https://customer-assets.emergentagent.com/job_divine-experience-4/artifacts/ke248diu_logo-animation.mp4',
+  heroVideo: '/videos/himalaya.mp4',
   hero1: 'https://images.pexels.com/photos/30778937/pexels-photo-30778937.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=1200&w=1920',
   hero2: 'https://images.pexels.com/photos/38087043/pexels-photo-38087043.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=1200&w=1920',
   mountains1: 'https://images.unsplash.com/photo-1504370805625-d32c54b16100?auto=format&fit=crop&w=1920&q=80',
@@ -42,8 +45,11 @@ const IMG = {
 
 // ============ LOADER ============
 function Loader({ onDone }) {
+  const videoRef = useRef(null)
+  const [videoOk, setVideoOk] = useState(false)
   useEffect(() => {
-    const t = setTimeout(onDone, 2800)
+    // Fallback: dismiss after 4.5s no matter what
+    const t = setTimeout(onDone, 4500)
     return () => clearTimeout(t)
   }, [onDone])
   return (
@@ -52,87 +58,108 @@ function Loader({ onDone }) {
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 1, ease: 'easeInOut' }}
-      style={{ background: 'radial-gradient(ellipse at center, #132238 0%, #0A1220 60%, #050810 100%)' }}
+      style={{ background: '#FAF9F4' }}
     >
-      {/* Floating particles */}
-      <div className="absolute inset-0">
-        {[...Array(30)].map((_, i) => (
+      {/* Ambient particles */}
+      <div className="absolute inset-0 pointer-events-none">
+        {[...Array(25)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-1 h-1 rounded-full bg-gold"
-            style={{ left: `${(i * 37) % 100}%`, top: `${(i * 53) % 100}%` }}
+            className="absolute w-1 h-1 rounded-full"
+            style={{
+              left: `${(i * 37) % 100}%`,
+              top: `${(i * 53) % 100}%`,
+              background: '#C8A14A',
+              boxShadow: '0 0 8px rgba(200,161,74,0.7)',
+            }}
             animate={{ y: [0, -30, 0], opacity: [0.2, 1, 0.2] }}
             transition={{ duration: 3 + (i % 5), repeat: Infinity, delay: i * 0.1 }}
           />
         ))}
       </div>
 
-      <div className="relative flex flex-col items-center gap-6">
-        {/* Golden circle animation */}
-        <div className="relative w-40 h-40">
-          <motion.svg
-            className="absolute inset-0"
-            viewBox="0 0 200 200"
-            initial={{ rotate: 0 }}
-            animate={{ rotate: 360 }}
-            transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
-          >
-            <defs>
-              <linearGradient id="loaderGold" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#F5DC96" />
-                <stop offset="50%" stopColor="#C8A14A" />
-                <stop offset="100%" stopColor="#8E6E22" />
-              </linearGradient>
-            </defs>
-            <motion.circle
-              cx="100" cy="100" r="85"
-              fill="none"
-              stroke="url(#loaderGold)"
-              strokeWidth="1.5"
-              strokeDasharray="534"
-              initial={{ strokeDashoffset: 534 }}
-              animate={{ strokeDashoffset: 0 }}
-              transition={{ duration: 2.2, ease: 'easeInOut' }}
-            />
-            <motion.circle
-              cx="100" cy="100" r="70"
-              fill="none"
-              stroke="#C8A14A"
-              strokeWidth="0.6"
-              strokeDasharray="3 6"
-              opacity="0.6"
-            />
-          </motion.svg>
-          {/* Om symbol */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <motion.div
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.6, duration: 0.8, ease: 'easeOut' }}
-              className="text-5xl gold-text font-display"
-            >
-              ॐ
-            </motion.div>
-          </div>
-        </div>
+      {/* Warm radial glow */}
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse at center, rgba(200,161,74,0.2) 0%, rgba(200,161,74,0) 60%)' }} />
 
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.2, duration: 0.8 }}
-          className="text-center"
-        >
-          <div className="font-display text-lg tracking-[0.4em] gold-shimmer">VISHV CHETNA TRUST</div>
-          <div className="font-serif-lux italic text-white/70 mt-2 text-sm tracking-widest">The Enlightened World</div>
-        </motion.div>
+      {/* Rotating gold ring behind logo */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8, rotate: 0 }}
+        animate={{ opacity: 1, scale: 1, rotate: 360 }}
+        transition={{
+          opacity: { duration: 0.8 },
+          scale: { duration: 0.8 },
+          rotate: { duration: 20, repeat: Infinity, ease: 'linear' },
+        }}
+        className="absolute w-[min(70vw,540px)] aspect-square"
+      >
+        <svg viewBox="0 0 200 200" className="w-full h-full">
+          <defs>
+            <linearGradient id="lgGold" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#F5DC96" />
+              <stop offset="50%" stopColor="#C8A14A" />
+              <stop offset="100%" stopColor="#8E6E22" />
+            </linearGradient>
+          </defs>
+          <circle cx="100" cy="100" r="94" fill="none" stroke="url(#lgGold)" strokeWidth="0.5" strokeDasharray="4 4" opacity="0.6" />
+          <circle cx="100" cy="100" r="88" fill="none" stroke="url(#lgGold)" strokeWidth="1" opacity="0.4" />
+        </svg>
+      </motion.div>
 
-        <motion.div
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{ delay: 1.6, duration: 1 }}
-          className="h-px w-40 bg-gradient-to-r from-transparent via-gold to-transparent origin-left"
+      {/* Logo — image base + video overlay */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1, ease: 'easeOut' }}
+        className="relative w-[min(55vw,400px)] aspect-square flex items-center justify-center"
+      >
+        {/* Base: logo image (always visible) */}
+        <motion.img
+          src="https://customer-assets.emergentagent.com/job_divine-experience-4/artifacts/vvf2uol0_ChatGPT%20Image%20Jul%202%2C%202026%2C%2006_21_52%20AM.png"
+          alt="Vishv Chetna Trust"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: videoOk ? 0 : 1 }}
+          transition={{ duration: 0.6 }}
+          className="absolute inset-0 w-full h-full object-contain"
         />
-      </div>
+        {/* Overlay: logo video (if it plays) */}
+        <video
+          ref={videoRef}
+          src="https://customer-assets.emergentagent.com/job_divine-experience-4/artifacts/ke248diu_logo-animation.mp4"
+          autoPlay
+          muted
+          playsInline
+          preload="auto"
+          onPlaying={() => setVideoOk(true)}
+          onEnded={() => setTimeout(onDone, 400)}
+          onError={() => setVideoOk(false)}
+          className="absolute inset-0 w-full h-full object-contain"
+        />
+      </motion.div>
+
+      {/* Text below logo */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.4, duration: 1 }}
+        className="absolute bottom-24 left-1/2 -translate-x-1/2 text-center"
+      >
+        <div className="font-display text-sm tracking-[0.5em] gold-text mb-2">VISHV CHETNA TRUST</div>
+        <div className="font-serif-lux italic text-navy/60 text-sm tracking-widest">The Enlightened World</div>
+      </motion.div>
+
+      {/* Bottom line + skip */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 2, duration: 1 }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4"
+      >
+        <div className="h-px w-40 bg-gradient-to-r from-transparent via-gold to-transparent" />
+        <button onClick={onDone} className="text-[10px] tracking-[0.4em] text-navy/50 hover:text-gold transition uppercase">
+          Skip Intro
+        </button>
+      </motion.div>
     </motion.div>
   )
 }
@@ -230,13 +257,10 @@ function Navigation() {
     >
       <div className="container flex items-center justify-between">
         <a href="#top" className="flex items-center gap-3 group">
-          <div className="relative w-10 h-10">
-            <div className="absolute inset-0 rounded-full gold-gradient opacity-90 group-hover:opacity-100 transition" />
-            <div className="absolute inset-[3px] rounded-full bg-navy flex items-center justify-center">
-              <span className="gold-text text-xl font-display">ॐ</span>
-            </div>
+          <div className="relative w-12 h-12 rounded-full bg-warmwhite p-1.5 shadow-lg group-hover:shadow-[0_0_20px_rgba(200,161,74,0.6)] transition">
+            <img src={IMG.logo} alt="Vishv Chetna Trust" className="w-full h-full object-contain rounded-full" />
           </div>
-          <div className="leading-tight">
+          <div className="leading-tight hidden sm:block">
             <div className="font-display text-[13px] tracking-[0.25em] text-white">VISHV CHETNA</div>
             <div className="font-serif-lux italic text-[10px] tracking-widest text-gold">The Enlightened World</div>
           </div>
@@ -333,12 +357,9 @@ function Particles({ count = 40, color = '#C8A14A' }) {
 function Hero() {
   const ref = useRef(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
-  const y1 = useTransform(scrollYProgress, [0, 1], ['0%', '40%'])
-  const y2 = useTransform(scrollYProgress, [0, 1], ['0%', '25%'])
-  const y3 = useTransform(scrollYProgress, [0, 1], ['0%', '15%'])
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.2])
+  const y1 = useTransform(scrollYProgress, [0, 1], ['0%', '30%'])
   const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0])
-  const sunY = useTransform(scrollYProgress, [0, 1], ['0%', '-60%'])
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.15])
 
   const [mouse, setMouse] = useState({ x: 0, y: 0 })
   const heroRef = useRef(null)
@@ -349,127 +370,115 @@ function Hero() {
   }
 
   return (
-    <section id="top" ref={ref} className="relative min-h-screen w-full overflow-hidden">
+    <section id="top" ref={ref} className="relative min-h-screen w-full overflow-hidden bg-black">
       <div ref={heroRef} onMouseMove={onMove} className="absolute inset-0">
-        {/* Sky gradient */}
-        <motion.div
-          style={{ scale }}
-          className="absolute inset-0 hero-bg-gradient"
-        />
-
-        {/* Sun */}
-        <motion.div
-          style={{ y: sunY, x: mouse.x * -20 }}
-          className="absolute left-1/2 bottom-[10%] -translate-x-1/2 pointer-events-none"
-        >
-          <div className="relative w-[520px] h-[520px] max-w-[70vw] max-h-[70vw]">
-            <div className="absolute inset-0 rounded-full"
-              style={{ background: 'radial-gradient(circle, rgba(255,244,200,0.95) 0%, rgba(255,214,120,0.7) 25%, rgba(200,161,74,0.3) 55%, rgba(200,161,74,0) 75%)' }} />
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 90, repeat: Infinity, ease: 'linear' }}
-              className="absolute inset-0"
-            >
-              {[...Array(12)].map((_, i) => (
-                <div key={i} className="absolute left-1/2 top-1/2 light-ray origin-bottom"
-                  style={{
-                    width: 3,
-                    height: '55%',
-                    transform: `translate(-50%,-100%) rotate(${i * 30}deg) translateY(-30%)`,
-                    opacity: 0.35,
-                  }} />
-              ))}
-            </motion.div>
-          </div>
+        {/* Video background */}
+        <motion.div style={{ scale, y: y1 }} className="absolute inset-0">
+          <video
+            src={IMG.heroVideo}
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster={IMG.hero1}
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{
+              transform: `translate3d(${mouse.x * -15}px, ${mouse.y * -10}px, 0) scale(1.08)`,
+              transition: 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)',
+            }}
+          />
+          {/* Fallback image (behind video, shown if video fails) */}
+          <img
+            src={IMG.hero1}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover -z-10"
+          />
         </motion.div>
 
-        {/* Distant mountains */}
-        <motion.div style={{ y: y3, x: mouse.x * -10 }} className="absolute inset-x-0 bottom-0 h-[60%]">
-          <img src={IMG.mountains2} alt="" className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-multiply" />
-        </motion.div>
-
-        {/* Middle mountains */}
-        <motion.div style={{ y: y2, x: mouse.x * -20 }} className="absolute inset-x-0 bottom-0 h-[50%]">
-          <img src={IMG.mountains1} alt="" className="absolute inset-0 w-full h-full object-cover opacity-80"
-            style={{ maskImage: 'linear-gradient(to top, black 60%, transparent)', WebkitMaskImage: 'linear-gradient(to top, black 60%, transparent)' }} />
-        </motion.div>
-
-        {/* Foreground mountains */}
-        <motion.div style={{ y: y1, x: mouse.x * -35 }} className="absolute inset-x-0 bottom-0 h-[40%]">
-          <img src={IMG.hero1} alt="" className="absolute inset-0 w-full h-full object-cover"
-            style={{ maskImage: 'linear-gradient(to top, black 70%, transparent)', WebkitMaskImage: 'linear-gradient(to top, black 70%, transparent)' }} />
-        </motion.div>
-
-        {/* Clouds */}
-        {[...Array(4)].map((_, i) => (
-          <motion.div
-            key={i}
-            initial={{ x: '-20%' }}
-            animate={{ x: '120%' }}
-            transition={{ duration: 60 + i * 15, repeat: Infinity, ease: 'linear', delay: i * 8 }}
-            className="absolute"
-            style={{ top: `${10 + i * 12}%`, opacity: 0.5 - i * 0.08 }}
-          >
-            <svg width="220" height="80" viewBox="0 0 220 80">
-              <ellipse cx="110" cy="45" rx="90" ry="25" fill="white" opacity="0.55" />
-              <ellipse cx="60" cy="40" rx="40" ry="18" fill="white" opacity="0.6" />
-              <ellipse cx="160" cy="50" rx="55" ry="22" fill="white" opacity="0.5" />
-            </svg>
-          </motion.div>
-        ))}
-
-        {/* Flying birds */}
-        {[...Array(3)].map((_, i) => (
-          <motion.div
-            key={i}
-            initial={{ x: '-10%', y: 0 }}
-            animate={{ x: '110%', y: [0, -20, 0, 15, 0] }}
-            transition={{ duration: 40 + i * 10, repeat: Infinity, delay: i * 5 }}
-            className="absolute"
-            style={{ top: `${25 + i * 8}%` }}
-          >
-            <svg width="30" height="14" viewBox="0 0 30 14" className="text-navy/60">
-              <path d="M2 8 Q 8 2, 15 7 Q 22 2, 28 8" stroke="currentColor" strokeWidth="1.5" fill="none" />
-            </svg>
-          </motion.div>
-        ))}
-
-        <Particles count={35} color="#C8A14A" />
-
-        {/* Light rays overlay */}
+        {/* Cinematic vignette + dark overlays */}
         <div className="absolute inset-0 pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse 60% 50% at 50% 60%, rgba(255,240,200,0.3), transparent 70%)' }} />
+          style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.7) 100%)' }} />
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.35) 75%, rgba(10,18,32,0.85) 100%)' }} />
+        {/* Warm golden atmosphere */}
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ background: 'radial-gradient(ellipse 60% 40% at 50% 50%, rgba(200,161,74,0.25), transparent 70%)' }} />
+
+        <Particles count={35} color="#F5DC96" />
       </div>
 
       {/* Content */}
-      <motion.div style={{ opacity }} className="relative z-10 min-h-screen flex flex-col items-center justify-center container text-center px-4 pt-24">
+      <motion.div style={{ opacity }} className="relative z-10 min-h-screen flex flex-col items-center justify-center container text-center px-4 pt-24 pb-16">
+        {/* Small logo badge */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 1 }}
-          className="inline-flex items-center gap-2 glass-gold px-4 py-1.5 rounded-full mb-8"
+          initial={{ opacity: 0, y: -20, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ delay: 0.3, duration: 0.9, ease: 'easeOut' }}
+          className="mb-8"
         >
-          <Sparkles className="w-3.5 h-3.5 text-gold" />
-          <span className="text-xs tracking-[0.3em] text-navy/80 font-medium">THE ENLIGHTENED WORLD</span>
+          <img src={IMG.logo} alt="Vishv Chetna Trust"
+            className="w-28 md:w-32 h-auto opacity-95"
+            style={{ mixBlendMode: 'screen', filter: 'drop-shadow(0 0 30px rgba(200,161,74,0.6))' }} />
         </motion.div>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 40 }}
+        {/* Eyebrow */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 1.2, ease: [0.2, 0.8, 0.2, 1] }}
-          className="font-display text-[10vw] md:text-[7.5vw] lg:text-[6.5vw] leading-[0.95] font-light text-navy tracking-tight max-w-6xl"
+          transition={{ delay: 0.7, duration: 0.9 }}
+          className="inline-flex items-center gap-4 mb-8"
         >
-          <span className="block">Awaken Your</span>
-          <span className="block font-serif-lux italic font-normal">
-            <span className="gold-shimmer">Inner Consciousness</span>
-          </span>
-        </motion.h1>
+          <span className="h-px w-12 bg-gradient-to-r from-transparent to-gold" />
+          <Sparkles className="w-3.5 h-3.5 text-gold" />
+          <span className="text-[11px] tracking-[0.5em] text-gold-light font-medium uppercase">The Enlightened World</span>
+          <Sparkles className="w-3.5 h-3.5 text-gold" />
+          <span className="h-px w-12 bg-gradient-to-l from-transparent to-gold" />
+        </motion.div>
+
+        {/* Main heading — eye-catching kinetic type */}
+        <div className="relative w-full">
+          <motion.h1
+            initial={{ opacity: 0, y: 60 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.9, duration: 1.4, ease: [0.2, 0.8, 0.2, 1] }}
+            className="font-display leading-[0.9] text-white tracking-tight mx-auto"
+            style={{ textShadow: '0 2px 30px rgba(0,0,0,0.5)' }}
+          >
+            <span className="block" style={{ fontSize: 'clamp(3rem, 11vw, 10rem)', letterSpacing: '0.02em' }}>
+              AWAKEN
+            </span>
+            <span className="block font-serif-lux italic font-light gold-shimmer mt-2"
+              style={{ fontSize: 'clamp(2rem, 7vw, 6.5rem)' }}>
+              your inner
+            </span>
+            <motion.span
+              initial={{ opacity: 0, scale: 0.92 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 1.5, duration: 1.6, ease: [0.2, 0.8, 0.2, 1] }}
+              className="block font-display font-bold gold-text mt-1 leading-none"
+              style={{ fontSize: 'clamp(2.2rem, 8vw, 8rem)', letterSpacing: '-0.02em' }}
+            >
+              CONSCIOUSNESS
+            </motion.span>
+          </motion.h1>
+
+          {/* Decorative gold rays behind the text */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 0.5, scale: 1 }}
+            transition={{ delay: 1.2, duration: 2 }}
+            className="absolute inset-0 pointer-events-none -z-10"
+          >
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] max-w-[100vw] max-h-[100vw]"
+              style={{ background: 'radial-gradient(circle, rgba(200,161,74,0.25) 0%, rgba(200,161,74,0) 60%)' }} />
+          </motion.div>
+        </div>
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.2, duration: 1 }}
-          className="mt-8 max-w-2xl text-navy/75 text-lg md:text-xl font-serif-lux italic leading-relaxed"
+          transition={{ delay: 1.9, duration: 1 }}
+          className="mt-10 max-w-2xl text-white/85 text-lg md:text-xl font-serif-lux italic leading-relaxed"
         >
           Discover meditation, healing, yoga, and ancient wisdom — a sacred path to transform your life, from within.
         </motion.p>
@@ -477,29 +486,48 @@ function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5, duration: 0.8 }}
+          transition={{ delay: 2.2, duration: 0.9 }}
           className="mt-12 flex flex-col sm:flex-row items-center gap-4"
         >
           <a href="#programs">
-            <Button size="lg" className="magnetic-btn h-14 px-8 rounded-full gold-gradient text-navy font-semibold text-base glow-gold hover:scale-[1.03] transition">
+            <Button size="lg" className="magnetic-btn h-14 px-9 rounded-full gold-gradient text-navy font-semibold text-base glow-gold-strong hover:scale-[1.03] transition">
               Explore Programs <ArrowRight className="ml-2 w-4 h-4" />
             </Button>
           </a>
           <a href="#donate">
-            <Button size="lg" variant="outline" className="h-14 px-8 rounded-full border-navy/30 bg-white/40 backdrop-blur-md text-navy hover:bg-white/70 font-semibold text-base">
+            <Button size="lg" variant="outline" className="h-14 px-8 rounded-full border-gold/60 bg-white/10 backdrop-blur-xl text-white hover:bg-white/20 hover:border-gold font-semibold text-base">
               <Heart className="mr-2 w-4 h-4" /> Donate
             </Button>
           </a>
         </motion.div>
 
-        {/* Lotus SVG small below CTA */}
+        {/* Infinite marquee of practices */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 2, duration: 1 }}
-          className="mt-16"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2.6, duration: 1 }}
+          className="mt-16 w-full max-w-4xl overflow-hidden relative"
+          style={{
+            maskImage: 'linear-gradient(90deg, transparent, black 15%, black 85%, transparent)',
+            WebkitMaskImage: 'linear-gradient(90deg, transparent, black 15%, black 85%, transparent)',
+          }}
         >
-          <LotusIcon className="w-14 h-14 text-navy/40 animate-float" />
+          <motion.div
+            animate={{ x: ['0%', '-50%'] }}
+            transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+            className="flex whitespace-nowrap gap-12"
+          >
+            {[...Array(2)].map((_, k) => (
+              <div key={k} className="flex gap-12 shrink-0">
+                {['Kundalini Yoga', 'Meditation', 'Reiki Healing', 'Panch Karma', 'Past Life Regression', 'Moksha', 'Ancient Wisdom', 'Ayurveda'].map((w) => (
+                  <span key={w} className="font-display text-sm tracking-[0.35em] text-gold/70 uppercase flex items-center gap-12">
+                    {w}
+                    <span className="w-1 h-1 rounded-full bg-gold" />
+                  </span>
+                ))}
+              </div>
+            ))}
+          </motion.div>
         </motion.div>
       </motion.div>
 
@@ -507,11 +535,11 @@ function Hero() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 2.4, duration: 1 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
+        transition={{ delay: 3, duration: 1 }}
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20"
       >
-        <div className="flex flex-col items-center gap-2 text-navy/60">
-          <span className="text-[10px] tracking-[0.3em]">SCROLL</span>
+        <div className="flex flex-col items-center gap-2 text-white/70">
+          <span className="text-[10px] tracking-[0.4em]">SCROLL</span>
           <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
             <ChevronDown className="w-4 h-4" />
           </motion.div>
@@ -1501,11 +1529,8 @@ function Footer() {
         <div className="grid md:grid-cols-4 gap-10 mb-16">
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-6">
-              <div className="relative w-12 h-12">
-                <div className="absolute inset-0 rounded-full gold-gradient" />
-                <div className="absolute inset-[3px] rounded-full bg-navy flex items-center justify-center">
-                  <span className="gold-text text-2xl font-display">ॐ</span>
-                </div>
+              <div className="relative w-14 h-14 rounded-full bg-warmwhite p-2 shadow-lg">
+                <img src={IMG.logo} alt="Vishv Chetna Trust" className="w-full h-full object-contain rounded-full" />
               </div>
               <div>
                 <div className="font-display text-white tracking-[0.25em]">VISHV CHETNA TRUST</div>
