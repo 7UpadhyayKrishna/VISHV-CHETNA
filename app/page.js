@@ -27,7 +27,7 @@ const ChakraWheel = dynamic(() => import('@/components/ChakraWheel'), { ssr: fal
 const IMG = {
   logo: 'https://customer-assets.emergentagent.com/job_divine-experience-4/artifacts/vvf2uol0_ChatGPT%20Image%20Jul%202%2C%202026%2C%2006_21_52%20AM.png',
   logoVideo: 'https://customer-assets.emergentagent.com/job_divine-experience-4/artifacts/ke248diu_logo-animation.mp4',
-  heroVideo: '/videos/himalaya.mp4',
+  heroVideo: 'https://videos.pexels.com/video-files/4058466/4058466-uhd_2560_1440_24fps.mp4',
   hero1: 'https://images.pexels.com/photos/30778937/pexels-photo-30778937.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=1200&w=1920',
   hero2: 'https://images.pexels.com/photos/38087043/pexels-photo-38087043.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=1200&w=1920',
   mountains1: 'https://images.unsplash.com/photo-1504370805625-d32c54b16100?auto=format&fit=crop&w=1920&q=80',
@@ -369,26 +369,15 @@ function Hero() {
   return (
     <section id="top" ref={ref} className="relative min-h-screen w-full overflow-hidden bg-black">
       <div ref={heroRef} onMouseMove={onMove} className="absolute inset-0">
-        {/* Video background */}
+        {/* Beautiful background image */}
         <motion.div style={{ scale, y: y1 }} className="absolute inset-0">
-          <video
-            src={IMG.heroVideo}
-            autoPlay
-            muted
-            loop
-            playsInline
-            poster={IMG.hero1}
-            className="absolute inset-0 w-full h-full object-cover"
+          <div
+            className="absolute inset-0 w-full h-full bg-cover bg-center"
             style={{
+              backgroundImage: `url(${IMG.hero1})`,
               transform: `translate3d(${mouse.x * -15}px, ${mouse.y * -10}px, 0) scale(1.08)`,
               transition: 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)',
             }}
-          />
-          {/* Fallback image (behind video, shown if video fails) */}
-          <img
-            src={IMG.hero1}
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover -z-10"
           />
         </motion.div>
 
