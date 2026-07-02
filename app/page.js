@@ -114,7 +114,7 @@ function Loader({ onDone }) {
       >
         {/* Base: logo image (always visible) */}
         <motion.img
-          src="https://customer-assets.emergentagent.com/job_divine-experience-4/artifacts/vvf2uol0_ChatGPT%20Image%20Jul%202%2C%202026%2C%2006_21_52%20AM.png"
+          src={IMG.logo}
           alt="Vishv Chetna Trust"
           initial={{ opacity: 0 }}
           animate={{ opacity: videoOk ? 0 : 1 }}
@@ -124,7 +124,7 @@ function Loader({ onDone }) {
         {/* Overlay: logo video (if it plays) */}
         <video
           ref={videoRef}
-          src="https://customer-assets.emergentagent.com/job_divine-experience-4/artifacts/ke248diu_logo-animation.mp4"
+          src={IMG.logoVideo}
           autoPlay
           muted
           playsInline
