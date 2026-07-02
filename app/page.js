@@ -13,7 +13,7 @@ import {
 import {
   Flame, Sparkles, Sun, Moon, Heart, Leaf, Waves, Mountain, Star, ArrowRight,
   Menu, X, Play, MapPin, Mail, Phone, Send, Instagram, Youtube, Facebook, Twitter,
-  ChevronRight, Circle, Wind, Feather, Compass, ChevronDown, Volume2, VolumeX
+  ChevronRight, Circle, Wind, Feather, Compass, ChevronDown, Volume2, VolumeX, Users
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -585,82 +585,177 @@ function About() {
     { icon: Feather, title: 'Our Values', text: 'Compassion, authenticity, sacred service, universal love, and unwavering devotion to truth and liberation.' },
   ]
 
+  const stats = [
+    { number: '15+', label: 'Years of Service', icon: Star },
+    { number: '5000+', label: 'Souls Transformed', icon: Users },
+    { number: '100+', label: 'Programs Conducted', icon: Sparkles },
+  ]
+
   return (
-    <section id="about" className="relative py-32 bg-warmwhite overflow-hidden">
-      <div className="absolute inset-0 opacity-40 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse at top right, rgba(200,161,74,0.15), transparent 60%)' }} />
+    <section id="about" className="relative py-32 bg-gradient-to-b from-warmcream via-sand to-warmcream overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute inset-0 paper-texture opacity-100" />
+      <div className="absolute top-20 right-10 w-72 h-72 bg-gold/5 rounded-full blur-3xl" />
+      <div className="absolute bottom-20 left-10 w-96 h-96 bg-terracotta/5 rounded-full blur-3xl" />
 
       <div className="container relative">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        {/* Header */}
+        <div className="text-center max-w-4xl mx-auto mb-20">
+          <Reveal>
+            <div className="inline-flex items-center gap-3 mb-6">
+              <span className="h-px w-16 bg-gold" />
+              <span className="text-xs tracking-[0.3em] font-medium text-gold uppercase">About Us</span>
+              <span className="h-px w-16 bg-gold" />
+            </div>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <h2 className="font-display text-5xl md:text-7xl leading-[1.05] text-earth-dark mb-6">
+              Guiding souls toward
+              <span className="block font-serif-lux italic gold-text mt-2">divine awakening.</span>
+            </h2>
+          </Reveal>
+          <Reveal delay={0.2}>
+            <p className="text-earth-med text-xl leading-relaxed font-serif-lux max-w-3xl mx-auto">
+              Vishv Chetna Trust is a sacred space dedicated to preserving ancient Indian wisdom and
+              sharing it with the world. Through meditation, yoga, healing, and timeless spiritual practices —
+              we help you rediscover the light that has always lived within you.
+            </p>
+          </Reveal>
+        </div>
+
+        {/* Main Content Grid */}
+        <div className="grid lg:grid-cols-2 gap-16 mb-20 items-center">
+          {/* Left: Enhanced Image */}
           <Reveal>
             <div className="relative">
-              <div className="absolute -top-6 -left-6 w-32 h-32 rounded-full bg-gold/10 blur-3xl" />
+              {/* Decorative corner elements */}
+              <div className="absolute -top-4 -left-4 w-24 h-24 border-t-2 border-l-2 border-gold/30 rounded-tl-3xl" />
+              <div className="absolute -bottom-4 -right-4 w-24 h-24 border-b-2 border-r-2 border-gold/30 rounded-br-3xl" />
+              
               <div className="relative overflow-hidden rounded-3xl shadow-2xl group">
                 <motion.img
                   src={IMG.temple1}
                   alt="Sacred temple"
                   className="w-full h-[620px] object-cover"
-                  whileHover={{ scale: 1.06 }}
-                  transition={{ duration: 1.4, ease: 'easeOut' }}
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 1.2, ease: 'easeOut' }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-navy/60 via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6 right-6 text-white">
-                  <div className="font-display text-sm tracking-[0.3em] text-gold">EST. 2009</div>
-                  <div className="font-serif-lux italic text-2xl mt-1">A Sanctuary for the Awakening Soul</div>
+                {/* Overlay gradients */}
+                <div className="absolute inset-0 bg-gradient-to-t from-earth-dark/70 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-gold/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                
+                {/* Overlay text */}
+                <div className="absolute bottom-8 left-8 right-8">
+                  <div className="glass-natural rounded-2xl p-6 backdrop-blur-md">
+                    <div className="font-display text-sm tracking-[0.3em] text-gold mb-2">EST. 2009</div>
+                    <div className="font-serif-lux italic text-2xl text-white leading-tight">
+                      A Sanctuary for the<br />Awakening Soul
+                    </div>
+                  </div>
                 </div>
               </div>
+
+              {/* Floating badge */}
               <motion.div
-                animate={{ y: [0, -14, 0] }}
-                transition={{ duration: 6, repeat: Infinity }}
-                className="absolute -bottom-8 -right-4 glass px-6 py-4 rounded-2xl flex items-center gap-3 shadow-xl"
+                animate={{ y: [0, -12, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+                className="absolute -bottom-6 -right-6 glass-natural rounded-2xl p-6 shadow-2xl border border-gold/20"
               >
-                <div className="w-10 h-10 rounded-full gold-gradient flex items-center justify-center">
-                  <Star className="w-4 h-4 text-navy" />
-                </div>
-                <div>
-                  <div className="font-display text-lg gold-text leading-none">15+</div>
-                  <div className="text-[10px] tracking-[0.2em] text-navy/70 mt-1">YEARS OF SERVICE</div>
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-full gold-gradient flex items-center justify-center">
+                    <Star className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <div className="font-display text-3xl gold-text leading-none">15+</div>
+                    <div className="text-xs tracking-[0.2em] text-earth-med uppercase mt-1">Years</div>
+                  </div>
                 </div>
               </motion.div>
             </div>
           </Reveal>
 
-          <div>
-            <Reveal><SectionEyebrow>About Us</SectionEyebrow></Reveal>
-            <Reveal delay={0.1}>
-              <h2 className="font-display text-5xl md:text-6xl leading-[1.05] text-navy mb-6">
-                Guiding souls toward
-                <span className="block font-serif-lux italic gold-text">divine awakening.</span>
-              </h2>
-            </Reveal>
-            <Reveal delay={0.15}>
-              <p className="text-navy/70 text-lg leading-relaxed mb-10 font-serif-lux">
-                Vishv Chetna Trust is a sacred space dedicated to preserving ancient Indian wisdom and
-                sharing it with the world. Through meditation, yoga, healing, and timeless spiritual practices —
-                we help you rediscover the light that has always lived within you.
-              </p>
-            </Reveal>
+          {/* Right: Cards */}
+          <div className="space-y-6">
+            {cards.map((c, i) => (
+              <Reveal key={c.title} delay={0.1 + i * 0.1}>
+                <motion.div
+                  whileHover={{ x: 6, scale: 1.02 }}
+                  className="group glass-natural rounded-3xl p-8 border border-gold/20 hover:border-gold/40 transition-all duration-500 cursor-pointer relative overflow-hidden soft-shadow hover:deep-shadow"
+                >
+                  {/* Background decoration */}
+                  <div className="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-gold/5 blur-2xl group-hover:bg-gold/10 transition-all duration-500" />
+                  
+                  <div className="relative flex items-start gap-6">
+                    {/* Icon */}
+                    <motion.div
+                      whileHover={{ rotate: [0, -10, 10, -10, 0] }}
+                      transition={{ duration: 0.5 }}
+                      className="shrink-0 w-16 h-16 rounded-2xl gold-gradient flex items-center justify-center text-white shadow-lg group-hover:shadow-xl transition-shadow"
+                    >
+                      <c.icon className="w-7 h-7" />
+                    </motion.div>
+                    
+                    {/* Content */}
+                    <div className="flex-1">
+                      <h3 className="font-display text-2xl text-earth-dark tracking-wide mb-3 group-hover:text-gold transition-colors">
+                        {c.title}
+                      </h3>
+                      <p className="text-earth-med font-serif-lux text-lg leading-relaxed">
+                        {c.text}
+                      </p>
+                    </div>
+                  </div>
 
-            <div className="space-y-4">
-              {cards.map((c, i) => (
-                <Reveal key={c.title} delay={0.2 + i * 0.1}>
-                  <motion.div
-                    whileHover={{ x: 8 }}
-                    className="group glass rounded-2xl p-6 flex items-start gap-5 hover:glow-gold transition-all cursor-default"
-                  >
-                    <div className="shrink-0 w-12 h-12 rounded-xl gold-gradient flex items-center justify-center text-navy group-hover:animate-gold-pulse">
-                      <c.icon className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <div className="font-display text-lg text-navy tracking-wider">{c.title}</div>
-                      <p className="text-navy/70 mt-1 font-serif-lux text-[17px] leading-relaxed">{c.text}</p>
-                    </div>
-                  </motion.div>
-                </Reveal>
-              ))}
-            </div>
+                  {/* Decorative corner */}
+                  <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="w-8 h-8 border-b-2 border-r-2 border-gold/30 rounded-br-xl" />
+                  </div>
+                </motion.div>
+              </Reveal>
+            ))}
           </div>
         </div>
+
+        {/* Stats Section */}
+        <Reveal delay={0.3}>
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {stats.map((stat, i) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.6 }}
+                className="glass-natural rounded-3xl p-8 text-center border border-gold/20 soft-shadow hover:deep-shadow transition-all duration-300 group cursor-pointer"
+              >
+                <motion.div
+                  whileHover={{ scale: 1.1, rotate: 360 }}
+                  transition={{ duration: 0.6 }}
+                  className="w-16 h-16 mx-auto mb-4 rounded-full gold-gradient flex items-center justify-center shadow-lg"
+                >
+                  <stat.icon className="w-7 h-7 text-white" />
+                </motion.div>
+                <div className="font-display text-5xl gold-text mb-2">{stat.number}</div>
+                <div className="text-sm tracking-[0.2em] text-earth-med uppercase font-medium">{stat.label}</div>
+              </motion.div>
+            ))}
+          </div>
+        </Reveal>
+
+        {/* Call to Action */}
+        <Reveal delay={0.4}>
+          <div className="text-center mt-16">
+            <motion.a
+              href="#programs"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+              className="inline-flex items-center gap-3 px-8 py-4 rounded-full gold-gradient text-white font-display tracking-wider shadow-lg hover:shadow-2xl transition-all group"
+            >
+              Explore Our Programs
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </motion.a>
+          </div>
+        </Reveal>
       </div>
     </section>
   )
