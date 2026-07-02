@@ -586,9 +586,9 @@ function About() {
   ]
 
   const stats = [
-    { number: '15+', label: 'Years of Service', icon: Star },
-    { number: '5000+', label: 'Souls Transformed', icon: Users },
-    { number: '100+', label: 'Programs Conducted', icon: Sparkles },
+    { number: '6+', label: 'Sacred Programs', icon: Sparkles },
+    { number: '∞', label: 'Potential to Transform', icon: Star },
+    { number: '24/7', label: 'Guidance Available', icon: Sun },
   ]
 
   return (
@@ -616,7 +616,7 @@ function About() {
           </Reveal>
           <Reveal delay={0.2}>
             <p className="text-earth-med text-xl leading-relaxed font-serif-lux max-w-3xl mx-auto">
-              Vishv Chetna Trust is a sacred space dedicated to preserving ancient Indian wisdom and
+              Vishv Chetna Trust is a newly established sacred space dedicated to preserving ancient Indian wisdom and
               sharing it with the world. Through meditation, yoga, healing, and timeless spiritual practices —
               we help you rediscover the light that has always lived within you.
             </p>
@@ -647,9 +647,9 @@ function About() {
                 {/* Overlay text */}
                 <div className="absolute bottom-8 left-8 right-8">
                   <div className="glass-natural rounded-2xl p-6 backdrop-blur-md">
-                    <div className="font-display text-sm tracking-[0.3em] text-gold mb-2">EST. 2009</div>
+                    <div className="font-display text-sm tracking-[0.3em] text-gold mb-2">NEWLY ESTABLISHED</div>
                     <div className="font-serif-lux italic text-2xl text-white leading-tight">
-                      A Sanctuary for the<br />Awakening Soul
+                      A Sacred Space for<br />Your Spiritual Journey
                     </div>
                   </div>
                 </div>
@@ -663,11 +663,11 @@ function About() {
               >
                 <div className="flex items-center gap-4">
                   <div className="w-14 h-14 rounded-full gold-gradient flex items-center justify-center">
-                    <Star className="w-6 h-6 text-white" />
+                    <Heart className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <div className="font-display text-3xl gold-text leading-none">15+</div>
-                    <div className="text-xs tracking-[0.2em] text-earth-med uppercase mt-1">Years</div>
+                    <div className="font-display text-2xl gold-text leading-none">NEW</div>
+                    <div className="text-xs tracking-[0.2em] text-earth-med uppercase mt-1">Journey</div>
                   </div>
                 </div>
               </motion.div>
@@ -764,12 +764,12 @@ function About() {
 // ============ PROGRAMS ============
 function Programs() {
   const programs = [
-    { title: 'Kundalini Yoga Meditation', tag: 'Awakening', desc: 'Awaken the sacred serpent energy through breath, mantra, and ancient kriyas.', img: IMG.meditation, icon: Flame },
-    { title: 'Yoga', tag: 'Body & Breath', desc: 'Timeless asanas that align body, breath, and consciousness in perfect harmony.', img: IMG.yoga, icon: Wind },
-    { title: 'Past Life Regression', tag: 'Soul Memory', desc: 'Journey beyond this lifetime to heal karmic imprints and rediscover your essence.', img: IMG.lotus, icon: Moon },
-    { title: 'Panch Karma & Naturopathy', tag: 'Ayurveda', desc: 'Five sacred purifications that restore harmony between mind, body, and nature.', img: IMG.panch, icon: Leaf },
-    { title: 'Moksha', tag: 'Liberation', desc: 'Dissolve the illusions of the ego and step into infinite, boundless awareness.', img: IMG.temple2, icon: Star },
-    { title: 'Reiki Healing', tag: 'Universal Energy', desc: 'Channel divine light and life-force to heal on every level — physical to soul.', img: IMG.reiki, icon: Sparkles },
+    { title: 'Kundalini Yoga Meditation', slug: 'kundalini-meditation', tag: 'Awakening', desc: 'Awaken the sacred serpent energy through breath, mantra, and ancient kriyas.', img: IMG.meditation, icon: Flame },
+    { title: 'Yoga', slug: 'yoga', tag: 'Body & Breath', desc: 'Timeless asanas that align body, breath, and consciousness in perfect harmony.', img: IMG.yoga, icon: Wind },
+    { title: 'Past Life Regression', slug: 'past-life-regression', tag: 'Soul Memory', desc: 'Journey beyond this lifetime to heal karmic imprints and rediscover your essence.', img: IMG.lotus, icon: Moon },
+    { title: 'Panch Karma & Naturopathy', slug: 'panch-karma', tag: 'Ayurveda', desc: 'Five sacred purifications that restore harmony between mind, body, and nature.', img: IMG.panch, icon: Leaf },
+    { title: 'Moksha', slug: 'moksha', tag: 'Liberation', desc: 'Dissolve the illusions of the ego and step into infinite, boundless awareness.', img: IMG.temple2, icon: Star },
+    { title: 'Reiki Healing', slug: 'reiki-healing', tag: 'Universal Energy', desc: 'Channel divine light and life-force to heal on every level — physical to soul.', img: IMG.reiki, icon: Sparkles },
   ]
 
   return (
@@ -805,7 +805,7 @@ function Programs() {
   )
 }
 
-function ProgramCard({ title, tag, desc, img, icon: Icon }) {
+function ProgramCard({ title, tag, desc, img, icon: Icon, slug }) {
   const ref = useRef(null)
   const [tilt, setTilt] = useState({ x: 0, y: 0 })
   const onMove = (e) => {
@@ -817,44 +817,46 @@ function ProgramCard({ title, tag, desc, img, icon: Icon }) {
   const reset = () => setTilt({ x: 0, y: 0 })
 
   return (
-    <motion.div
-      ref={ref}
-      onMouseMove={onMove}
-      onMouseLeave={reset}
-      style={{ transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)` }}
-      className="group relative rounded-3xl overflow-hidden glass-dark border border-gold/15 hover:border-gold/50 transition-all duration-500 hover:-translate-y-2 hover:glow-gold"
-    >
-      <div className="relative h-64 overflow-hidden">
-        <motion.img
-          src={img}
-          alt={title}
-          className="absolute inset-0 w-full h-full object-cover"
-          whileHover={{ scale: 1.15 }}
-          transition={{ duration: 1.2, ease: 'easeOut' }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/40 to-transparent" />
-        <div className="absolute top-4 left-4 glass-gold px-3 py-1 rounded-full text-[10px] tracking-widest text-gold uppercase">
-          {tag}
+    <a href={`/programs/${slug}`}>
+      <motion.div
+        ref={ref}
+        onMouseMove={onMove}
+        onMouseLeave={reset}
+        style={{ transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)` }}
+        className="group relative rounded-3xl overflow-hidden glass-dark border border-gold/15 hover:border-gold/50 transition-all duration-500 hover:-translate-y-2 hover:glow-gold cursor-pointer"
+      >
+        <div className="relative h-64 overflow-hidden">
+          <motion.img
+            src={img}
+            alt={title}
+            className="absolute inset-0 w-full h-full object-cover"
+            whileHover={{ scale: 1.15 }}
+            transition={{ duration: 1.2, ease: 'easeOut' }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/40 to-transparent" />
+          <div className="absolute top-4 left-4 glass-gold px-3 py-1 rounded-full text-[10px] tracking-widest text-gold uppercase">
+            {tag}
+          </div>
+          <motion.div
+            whileHover={{ rotate: 360, scale: 1.1 }}
+            transition={{ duration: 0.8 }}
+            className="absolute bottom-4 right-4 w-12 h-12 rounded-full gold-gradient flex items-center justify-center text-navy shadow-lg"
+          >
+            <Icon className="w-5 h-5" />
+          </motion.div>
         </div>
-        <motion.div
-          whileHover={{ rotate: 360, scale: 1.1 }}
-          transition={{ duration: 0.8 }}
-          className="absolute bottom-4 right-4 w-12 h-12 rounded-full gold-gradient flex items-center justify-center text-navy shadow-lg"
-        >
-          <Icon className="w-5 h-5" />
-        </motion.div>
-      </div>
-      <div className="p-6">
-        <h3 className="font-display text-xl text-white tracking-wider mb-2">{title}</h3>
-        <p className="font-serif-lux text-white/70 leading-relaxed text-[17px]">{desc}</p>
-        <div className="mt-5 flex items-center gap-2 text-gold text-sm font-medium cursor-pointer group/btn">
-          Learn More
-          <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+        <div className="p-6">
+          <h3 className="font-display text-xl text-white tracking-wider mb-2">{title}</h3>
+          <p className="font-serif-lux text-white/70 leading-relaxed text-[17px]">{desc}</p>
+          <div className="mt-5 flex items-center gap-2 text-gold text-sm font-medium cursor-pointer group/btn">
+            Learn More
+            <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+          </div>
         </div>
-      </div>
-      <div className="absolute inset-0 rounded-3xl pointer-events-none opacity-0 group-hover:opacity-100 transition"
-        style={{ background: 'radial-gradient(circle at var(--x,50%) var(--y,50%), rgba(200,161,74,0.15), transparent 40%)' }} />
-    </motion.div>
+        <div className="absolute inset-0 rounded-3xl pointer-events-none opacity-0 group-hover:opacity-100 transition"
+          style={{ background: 'radial-gradient(circle at var(--x,50%) var(--y,50%), rgba(200,161,74,0.15), transparent 40%)' }} />
+      </motion.div>
+    </a>
   )
 }
 
