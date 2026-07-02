@@ -21,7 +21,6 @@ import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
 
 // Dynamic 3D + interactive imports (SSR-safe)
-const Lotus3D = dynamic(() => import('@/components/Lotus3D'), { ssr: false, loading: () => <div className="w-full aspect-square" /> })
 const ChakraWheel = dynamic(() => import('@/components/ChakraWheel'), { ssr: false })
 
 // ============ IMAGE ASSETS ============
@@ -38,7 +37,7 @@ const IMG = {
   temple2: 'https://images.unsplash.com/photo-1648450934224-2dfd28a9e316?auto=format&fit=crop&w=1600&q=80',
   meditation: 'https://images.unsplash.com/photo-1660240141249-807c9731931e?auto=format&fit=crop&w=1200&q=80',
   yoga: 'https://images.unsplash.com/photo-1712934665512-555960ea3680?auto=format&fit=crop&w=1200&q=80',
-  lotus: 'https://images.unsplash.com/photo-1660993895400-fd4e7d3ceda8?auto=format&fit=crop&w=1200&q=80',
+  lotus: 'https://images.unsplash.com/photo-1616435577207-ca90abc6b732?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2OTV8MHwxfHNlYXJjaHwyfHxsb3R1cyUyMGZsb3dlcnxlbnwwfHx8fDE3ODI5NTg0Mjh8MA&ixlib=rb-4.1.0&q=85',
   panch: 'https://images.unsplash.com/photo-1646815672058-c203442b9c0d?auto=format&fit=crop&w=1200&q=80',
   reiki: 'https://images.unsplash.com/photo-1619136652739-98f01e200732?auto=format&fit=crop&w=1200&q=80',
 }
@@ -780,38 +779,40 @@ function LotusSection() {
   const ref = useRef(null)
   const [mouse, setMouse] = useState({ x: 0, y: 0 })
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
-  const rotate = useTransform(scrollYProgress, [0, 1], [-30, 30])
+  const rotate = useTransform(scrollYProgress, [0, 1], [-15, 15])
 
   const onMove = (e) => {
-    const r = ref.current.getBoundingClientRect()
-    setMouse({ x: ((e.clientX - r.left) / r.width - 0.5) * 30, y: ((e.clientY - r.top) / r.height - 0.5) * 30 })
+    const r = ref.current?.getBoundingClientRect()
+    if (!r) return
+    setMouse({ x: ((e.clientX - r.left) / r.width - 0.5) * 20, y: ((e.clientY - r.top) / r.height - 0.5) * 20 })
   }
 
   return (
-    <section ref={ref} onMouseMove={onMove} className="relative py-32 bg-navy overflow-hidden">
-      <div className="absolute inset-0 starfield opacity-40" />
-      <div className="absolute inset-0 radial-gold opacity-60" />
+    <section ref={ref} onMouseMove={onMove} className="relative py-32 bg-gradient-to-b from-warmcream via-sand to-warmcream overflow-hidden">
+      <div className="absolute inset-0 paper-texture opacity-100" />
+      <div className="absolute inset-0 pointer-events-none" 
+        style={{ background: 'radial-gradient(ellipse 50% 40% at 50% 50%, rgba(184,147,93,0.12), transparent 70%)' }} />
 
       <div className="container relative grid lg:grid-cols-2 gap-12 items-center">
         <div>
           <Reveal><SectionEyebrow>Sacred Symbol</SectionEyebrow></Reveal>
           <Reveal delay={0.1}>
-            <h2 className="font-display text-5xl md:text-6xl text-white leading-[1.05]">
+            <h2 className="font-display text-5xl md:text-6xl text-earth-dark leading-[1.05]">
               The Lotus
-              <span className="block font-serif-lux italic gold-shimmer">rises from the mud.</span>
+              <span className="block font-serif-lux italic gold-text">rises from the mud.</span>
             </h2>
           </Reveal>
           <Reveal delay={0.2}>
-            <p className="mt-6 text-white/70 text-lg font-serif-lux leading-relaxed max-w-lg">
+            <p className="mt-6 text-earth-med text-lg font-serif-lux leading-relaxed max-w-lg">
               A thousand-petaled flower blooms within every soul. It is the eternal reminder that from darkness
-              rises the most exquisite light. Move your cursor — feel it respond to your presence.
+              rises the most exquisite light — a symbol of purity, rebirth, and spiritual enlightenment.
             </p>
           </Reveal>
           <Reveal delay={0.3}>
             <div className="mt-8 grid grid-cols-3 gap-4 max-w-md">
               {['Purity','Rebirth','Enlightenment'].map((w) => (
-                <div key={w} className="glass-dark rounded-xl p-4 text-center border border-gold/20">
-                  <div className="font-serif-lux italic text-gold text-xl">{w}</div>
+                <div key={w} className="glass-natural rounded-xl p-4 text-center border border-gold/25 shadow-sm">
+                  <div className="font-serif-lux italic text-gold text-xl font-semibold">{w}</div>
                 </div>
               ))}
             </div>
@@ -819,10 +820,65 @@ function LotusSection() {
         </div>
 
         <motion.div
-          style={{ rotate }}
+          style={{ 
+            rotate,
+            x: mouse.x,
+            y: mouse.y,
+          }}
+          transition={{ type: 'spring', stiffness: 150, damping: 20 }}
           className="relative w-full aspect-square max-w-[560px] mx-auto"
         >
-          <Lotus3D />
+          <Reveal delay={0.2}>
+            <div className="relative w-full h-full">
+              {/* Soft glow behind lotus */}
+              <div className="absolute inset-0 rounded-full blur-3xl opacity-40"
+                style={{ background: 'radial-gradient(circle, rgba(212,184,150,0.6), transparent 70%)' }} />
+              
+              {/* Beautiful lotus image */}
+              <motion.div
+                animate={{
+                  scale: [1, 1.02, 1],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+                className="relative w-full h-full rounded-full overflow-hidden shadow-2xl"
+              >
+                <img
+                  src={IMG.lotus}
+                  alt="Sacred Lotus Flower"
+                  className="w-full h-full object-cover"
+                  style={{
+                    filter: 'brightness(1.1) saturate(1.2) contrast(1.05)',
+                  }}
+                />
+                {/* Subtle overlay for depth */}
+                <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-gold/5" />
+              </motion.div>
+
+              {/* Decorative rings */}
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
+                className="absolute inset-0 pointer-events-none"
+              >
+                <svg viewBox="0 0 200 200" className="w-full h-full">
+                  <circle cx="100" cy="100" r="98" fill="none" stroke="rgba(184,147,93,0.2)" strokeWidth="0.5" strokeDasharray="3 3" />
+                </svg>
+              </motion.div>
+              <motion.div
+                animate={{ rotate: -360 }}
+                transition={{ duration: 50, repeat: Infinity, ease: 'linear' }}
+                className="absolute inset-[-4px] pointer-events-none"
+              >
+                <svg viewBox="0 0 200 200" className="w-full h-full">
+                  <circle cx="100" cy="100" r="99" fill="none" stroke="rgba(184,147,93,0.15)" strokeWidth="0.5" strokeDasharray="5 5" />
+                </svg>
+              </motion.div>
+            </div>
+          </Reveal>
         </motion.div>
       </div>
     </section>
