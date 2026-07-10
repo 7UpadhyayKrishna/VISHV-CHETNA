@@ -63,7 +63,7 @@ export default function KundaliniMeditationPage() {
               </div>
 
               <Link href="/#contact">
-                <Button className="rounded-full gold-gradient text-white px-8 py-6 text-lg font-display">
+                <Button className="rounded-full gold-gradient text-navy px-8 py-6 text-lg font-display">
                   Enroll Now
                 </Button>
               </Link>
@@ -159,7 +159,7 @@ export default function KundaliniMeditationPage() {
             Join us for a transformative experience that will unlock your highest potential
           </p>
           <Link href="/#contact">
-            <Button className="rounded-full gold-gradient text-white px-10 py-6 text-lg font-display">
+            <Button className="rounded-full gold-gradient text-navy px-10 py-6 text-lg font-display">
               Contact Us to Enroll
             </Button>
           </Link>

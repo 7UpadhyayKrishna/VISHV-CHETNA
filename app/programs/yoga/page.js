@@ -62,7 +62,7 @@ export default function YogaPage() {
               </div>
 
               <Link href="/#contact">
-                <Button className="rounded-full gold-gradient text-white px-8 py-6 text-lg font-display">
+                <Button className="rounded-full gold-gradient text-navy px-8 py-6 text-lg font-display">
                   Join a Class
                 </Button>
               </Link>
@@ -156,7 +156,7 @@ export default function YogaPage() {
             Experience the union of body, mind, and spirit through this ancient practice
           </p>
           <Link href="/#contact">
-            <Button className="rounded-full gold-gradient text-white px-10 py-6 text-lg font-display">
+            <Button className="rounded-full gold-gradient text-navy px-10 py-6 text-lg font-display">
               Contact Us to Join
             </Button>
           </Link>

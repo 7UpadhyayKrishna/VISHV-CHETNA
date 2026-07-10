@@ -62,7 +62,7 @@ export default function MokshaPage() {
               </div>
 
               <Link href="/#contact">
-                <Button className="rounded-full gold-gradient text-white px-8 py-6 text-lg font-display">
+                <Button className="rounded-full gold-gradient text-navy px-8 py-6 text-lg font-display">
                   Begin the Path
                 </Button>
               </Link>
@@ -157,7 +157,7 @@ export default function MokshaPage() {
             Take the final step in your spiritual journey — realize your infinite nature
           </p>
           <Link href="/#contact">
-            <Button className="rounded-full gold-gradient text-white px-10 py-6 text-lg font-display">
+            <Button className="rounded-full gold-gradient text-navy px-10 py-6 text-lg font-display">
               Begin Your Journey
             </Button>
           </Link>

@@ -62,7 +62,7 @@ export default function PastLifeRegressionPage() {
               </div>
 
               <Link href="/#contact">
-                <Button className="rounded-full gold-gradient text-white px-8 py-6 text-lg font-display">
+                <Button className="rounded-full gold-gradient text-navy px-8 py-6 text-lg font-display">
                   Book a Session
                 </Button>
               </Link>
@@ -156,7 +156,7 @@ export default function PastLifeRegressionPage() {
             Unlock the wisdom of your past lives and heal your present
           </p>
           <Link href="/#contact">
-            <Button className="rounded-full gold-gradient text-white px-10 py-6 text-lg font-display">
+            <Button className="rounded-full gold-gradient text-navy px-10 py-6 text-lg font-display">
               Schedule Your Session
             </Button>
           </Link>

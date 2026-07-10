@@ -62,7 +62,7 @@ export default function ReikiHealingPage() {
               </div>
 
               <Link href="/#contact">
-                <Button className="rounded-full gold-gradient text-white px-8 py-6 text-lg font-display">
+                <Button className="rounded-full gold-gradient text-navy px-8 py-6 text-lg font-display">
                   Book a Session
                 </Button>
               </Link>
@@ -157,7 +157,7 @@ export default function ReikiHealingPage() {
             Allow universal life-force energy to restore balance and harmony
           </p>
           <Link href="/#contact">
-            <Button className="rounded-full gold-gradient text-white px-10 py-6 text-lg font-display">
+            <Button className="rounded-full gold-gradient text-navy px-10 py-6 text-lg font-display">
               Book Your Healing Session
             </Button>
           </Link>

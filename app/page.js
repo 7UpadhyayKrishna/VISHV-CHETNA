@@ -20,6 +20,8 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
 
+const formatNumber = (value) => value.toLocaleString('en-IN')
+
 // Dynamic 3D + interactive imports (SSR-safe)
 const ChakraWheel = dynamic(() => import('@/components/ChakraWheel'), { ssr: false })
 
@@ -278,7 +280,7 @@ function Navigation() {
 
         <div className="hidden lg:block">
           <a href="#donate">
-            <Button className="rounded-full gold-gradient text-white font-semibold px-6 shadow-md hover:shadow-lg transition-all">
+            <Button className="rounded-full gold-gradient text-navy font-semibold px-6 shadow-md hover:shadow-lg transition-all">
               <Heart className="w-4 h-4 mr-2" /> Donate
             </Button>
           </a>
@@ -303,7 +305,7 @@ function Navigation() {
                   className="text-earth-dark hover:text-gold py-2 font-medium transition-colors">{l.label}</a>
               ))}
               <a href="#donate" onClick={() => setOpen(false)}>
-                <Button className="w-full rounded-full gold-gradient text-white font-semibold mt-2 shadow-md">
+                <Button className="w-full rounded-full gold-gradient text-navy font-semibold mt-2 shadow-md">
                   <Heart className="w-4 h-4 mr-2" /> Donate
                 </Button>
               </a>
@@ -634,8 +636,8 @@ function About() {
               
               <div className="relative overflow-hidden rounded-3xl shadow-2xl group">
                 <motion.img
-                  src={IMG.temple1}
-                  alt="Sacred temple"
+                  src="/videos/yoga-guruji.png"
+                  alt="Yoga Guruji"
                   className="w-full h-[620px] object-cover"
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 1.2, ease: 'easeOut' }}
@@ -648,7 +650,7 @@ function About() {
                 <div className="absolute bottom-8 left-8 right-8">
                   <div className="glass-natural rounded-2xl p-6 backdrop-blur-md">
                     <div className="font-display text-sm tracking-[0.3em] text-gold mb-2">NEWLY ESTABLISHED</div>
-                    <div className="font-serif-lux italic text-2xl text-white leading-tight">
+                    <div className="font-serif-lux italic text-2xl text-earth-dark leading-tight">
                       A Sacred Space for<br />Your Spiritual Journey
                     </div>
                   </div>
@@ -663,7 +665,7 @@ function About() {
               >
                 <div className="flex items-center gap-4">
                   <div className="w-14 h-14 rounded-full gold-gradient flex items-center justify-center">
-                    <Heart className="w-6 h-6 text-white" />
+                    <Heart className="w-6 h-6 text-navy" />
                   </div>
                   <div>
                     <div className="font-display text-2xl gold-text leading-none">NEW</div>
@@ -690,7 +692,7 @@ function About() {
                     <motion.div
                       whileHover={{ rotate: [0, -10, 10, -10, 0] }}
                       transition={{ duration: 0.5 }}
-                      className="shrink-0 w-16 h-16 rounded-2xl gold-gradient flex items-center justify-center text-white shadow-lg group-hover:shadow-xl transition-shadow"
+                      className="shrink-0 w-16 h-16 rounded-2xl gold-gradient flex items-center justify-center text-navy shadow-lg group-hover:shadow-xl transition-shadow"
                     >
                       <c.icon className="w-7 h-7" />
                     </motion.div>
@@ -733,7 +735,7 @@ function About() {
                   transition={{ duration: 0.6 }}
                   className="w-16 h-16 mx-auto mb-4 rounded-full gold-gradient flex items-center justify-center shadow-lg"
                 >
-                  <stat.icon className="w-7 h-7 text-white" />
+                  <stat.icon className="w-7 h-7 text-navy" />
                 </motion.div>
                 <div className="font-display text-5xl gold-text mb-2">{stat.number}</div>
                 <div className="text-sm tracking-[0.2em] text-earth-med uppercase font-medium">{stat.label}</div>
@@ -749,7 +751,7 @@ function About() {
               href="#programs"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
-              className="inline-flex items-center gap-3 px-8 py-4 rounded-full gold-gradient text-white font-display tracking-wider shadow-lg hover:shadow-2xl transition-all group"
+              className="inline-flex items-center gap-3 px-8 py-4 rounded-full gold-gradient text-navy font-display tracking-wider shadow-lg hover:shadow-2xl transition-all group"
             >
               Explore Our Programs
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -841,7 +843,7 @@ function ProgramCard({ title, tag, desc, img, icon: Icon, slug }) {
           <motion.div
             whileHover={{ rotate: 360, scale: 1.1 }}
             transition={{ duration: 0.8 }}
-            className="absolute bottom-4 right-4 w-12 h-12 rounded-full gold-gradient flex items-center justify-center text-white shadow-lg"
+            className="absolute bottom-4 right-4 w-12 h-12 rounded-full gold-gradient flex items-center justify-center text-navy shadow-lg"
           >
             <Icon className="w-5 h-5" />
           </motion.div>
@@ -934,8 +936,8 @@ function LotusSection() {
                 className="relative w-full h-full rounded-full overflow-hidden shadow-2xl"
               >
                 <img
-                  src={IMG.lotus}
-                  alt="Sacred Lotus Flower"
+                  src="/videos/guru-ji.png"
+                  alt="Guru Ji"
                   className="w-full h-full object-cover"
                   style={{
                     filter: 'brightness(1.1) saturate(1.2) contrast(1.05)',
@@ -992,7 +994,7 @@ function Counter({ to, suffix = '+' }) {
     }
     requestAnimationFrame(loop)
   }, [inView, to])
-  return <span ref={ref}>{v.toLocaleString()}{suffix}</span>
+  return <span ref={ref}>{formatNumber(v)}{suffix}</span>
 }
 
 function Stats() {
@@ -1414,8 +1416,8 @@ function Donate() {
           <Reveal delay={0.3}>
             <div className="mt-10">
               <div className="flex justify-between text-sm mb-2">
-                <span className="text-navy/60">₹{raised.toLocaleString()} raised</span>
-                <span className="gold-text font-medium">Goal ₹{goal.toLocaleString()}</span>
+                <span className="text-navy/60">₹{formatNumber(raised)} raised</span>
+                <span className="gold-text font-medium">Goal ₹{formatNumber(goal)}</span>
               </div>
               <div className="h-3 rounded-full bg-navy/10 overflow-hidden">
                 <motion.div
@@ -1446,7 +1448,7 @@ function Donate() {
                     onClick={() => setAmount(a)}
                     className={`py-3 rounded-xl font-medium transition ${amount === a ? 'gold-gradient text-navy glow-gold' : 'glass border border-gold/20 text-navy hover:border-gold/60'}`}
                   >
-                    ₹{a.toLocaleString()}
+                    ₹{formatNumber(a)}
                   </button>
                 ))}
               </div>
