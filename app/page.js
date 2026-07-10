@@ -28,7 +28,6 @@ const ChakraWheel = dynamic(() => import('@/components/ChakraWheel'), { ssr: fal
 // ============ IMAGE ASSETS ============
 const IMG = {
   logo: 'https://weighbridge-management-system.s3.ap-south-1.amazonaws.com/vct.png',
-  logoVideo: 'https://customer-assets.emergentagent.com/job_divine-experience-4/artifacts/ke248diu_logo-animation.mp4',
   heroVideo: 'https://videos.pexels.com/video-files/4058466/4058466-uhd_2560_1440_24fps.mp4',
   hero1: 'https://images.pexels.com/photos/30778937/pexels-photo-30778937.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=1200&w=1920',
   hero2: 'https://images.pexels.com/photos/38087043/pexels-photo-38087043.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=1200&w=1920',
@@ -46,8 +45,6 @@ const IMG = {
 
 // ============ LOADER ============
 function Loader({ onDone }) {
-  const videoRef = useRef(null)
-  const [videoOk, setVideoOk] = useState(false)
   useEffect(() => {
     // Fallback: dismiss after 4.5s no matter what
     const t = setTimeout(onDone, 4500)
@@ -107,33 +104,19 @@ function Loader({ onDone }) {
         </svg>
       </motion.div>
 
-      {/* Logo — image base + video overlay */}
+      {/* Logo */}
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1, ease: 'easeOut' }}
         className="relative w-[min(55vw,400px)] aspect-square flex items-center justify-center"
       >
-        {/* Base: logo image (always visible) */}
         <motion.img
           src={IMG.logo}
           alt="Vishv Chetna Trust"
           initial={{ opacity: 0 }}
-          animate={{ opacity: videoOk ? 0 : 1 }}
-          transition={{ duration: 0.6 }}
-          className="absolute inset-0 w-full h-full object-contain"
-        />
-        {/* Overlay: logo video (if it plays) */}
-        <video
-          ref={videoRef}
-          src={IMG.logoVideo}
-          autoPlay
-          muted
-          playsInline
-          preload="auto"
-          onPlaying={() => setVideoOk(true)}
-          onEnded={() => setTimeout(onDone, 400)}
-          onError={() => setVideoOk(false)}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
           className="absolute inset-0 w-full h-full object-contain"
         />
       </motion.div>
