@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server'
 import { isAdminAuthenticated } from '@/lib/admin-auth'
-import { getSiteContent, updateSiteContent } from '@/lib/site-content'
+import { getContentStatus, getSiteContent, updateSiteContent } from '@/lib/site-content'
 
 export async function GET() {
   if (!(await isAdminAuthenticated())) {
     return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 })
   }
-  const content = await getSiteContent()
-  return NextResponse.json({ ok: true, content })
+  const [content, status] = await Promise.all([getSiteContent(), getContentStatus()])
+  return NextResponse.json({ ok: true, content, status })
 }
 
 export async function PUT(req) {
@@ -22,6 +22,10 @@ export async function PUT(req) {
     const content = await updateSiteContent(body)
     return NextResponse.json({ ok: true, content })
   } catch (e) {
-    return NextResponse.json({ ok: false, error: e.message || 'Save failed' }, { status: 500 })
+    console.error('[admin/content PUT]', e)
+    return NextResponse.json({
+      ok: false,
+      error: e.message || 'Save failed',
+    }, { status: 500 })
   }
 }

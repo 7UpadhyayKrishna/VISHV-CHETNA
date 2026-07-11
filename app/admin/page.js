@@ -202,6 +202,7 @@ export default function AdminDashboardPage() {
   const [saving, setSaving] = useState(false)
   const [previewKey, setPreviewKey] = useState(0)
   const [programIdx, setProgramIdx] = useState(0)
+  const [dbStatus, setDbStatus] = useState(null)
 
   const load = async () => {
     setLoading(true)
@@ -213,6 +214,7 @@ export default function AdminDashboardPage() {
       }
       const data = await res.json()
       if (data.content) setContent(data.content)
+      if (data.status) setDbStatus(data.status)
     } catch {
       toast.error('Failed to load content')
     } finally {
@@ -232,13 +234,14 @@ export default function AdminDashboardPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(content),
       })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'Save failed')
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(data.error || `Save failed (${res.status})`)
       setContent(data.content)
       setPreviewKey((k) => k + 1)
+      setDbStatus((s) => (s ? { ...s, dbConnected: true, error: null } : s))
       toast.success('Saved — preview refreshed')
     } catch (e) {
-      toast.error(e.message || 'Save failed')
+      toast.error(e.message || 'Save failed', { duration: 8000 })
     } finally {
       setSaving(false)
     }
@@ -510,6 +513,14 @@ export default function AdminDashboardPage() {
           </div>
         </div>
       </header>
+
+      {dbStatus && !dbStatus.dbConnected && (
+        <div className="shrink-0 bg-red-50 border-b border-red-200 text-red-800 text-sm px-4 py-3">
+          <strong>Database not connected.</strong>{' '}
+          {dbStatus.error || 'Saving will fail until MongoDB is configured.'}
+          {' '}Add <code className="bg-red-100 px-1 rounded">MONGO_URL</code> (and <code className="bg-red-100 px-1 rounded">DB_NAME</code>) in Vercel env vars, allow <code className="bg-red-100 px-1 rounded">0.0.0.0/0</code> in Atlas Network Access, then redeploy.
+        </div>
+      )}
 
       <div className="flex-1 min-h-0 max-w-[1600px] w-full mx-auto px-4 py-4 grid lg:grid-cols-[220px_1fr_1fr] gap-4">
         <aside className="space-y-1 overflow-y-auto min-h-0 pr-1">
