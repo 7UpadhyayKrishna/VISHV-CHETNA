@@ -1,9 +1,18 @@
 'use client'
 import { useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import Lenis from 'lenis'
 
 export default function SmoothScroll({ children }) {
+  const pathname = usePathname()
+  const isAdmin = pathname?.startsWith('/admin')
+
   useEffect(() => {
+    if (isAdmin) {
+      if (typeof window !== 'undefined') window.__lenis = null
+      return undefined
+    }
+
     const lenis = new Lenis({
       duration: 1.4,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -19,7 +28,6 @@ export default function SmoothScroll({ children }) {
     }
     rafId = requestAnimationFrame(raf)
 
-    // Expose lenis for GSAP ScrollTrigger sync
     if (typeof window !== 'undefined') {
       window.__lenis = lenis
     }
@@ -29,7 +37,7 @@ export default function SmoothScroll({ children }) {
       lenis.destroy()
       if (typeof window !== 'undefined') window.__lenis = null
     }
-  }, [])
+  }, [isAdmin])
 
   return children
 }

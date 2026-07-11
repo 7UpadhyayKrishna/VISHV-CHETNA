@@ -19,32 +19,28 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
+import { SiteContentProvider, useSiteContent } from '@/components/SiteContentProvider'
 
 const formatNumber = (value) => value.toLocaleString('en-IN')
 
 // Dynamic 3D + interactive imports (SSR-safe)
 const ChakraWheel = dynamic(() => import('@/components/ChakraWheel'), { ssr: false })
 
-// ============ IMAGE ASSETS ============
-const IMG = {
-  logo: 'https://weighbridge-management-system.s3.ap-south-1.amazonaws.com/vct.png',
-  heroVideo: 'https://videos.pexels.com/video-files/4058466/4058466-uhd_2560_1440_24fps.mp4',
-  hero1: 'https://images.pexels.com/photos/30778937/pexels-photo-30778937.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=1200&w=1920',
-  hero2: 'https://images.pexels.com/photos/38087043/pexels-photo-38087043.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=1200&w=1920',
-  mountains1: 'https://images.unsplash.com/photo-1504370805625-d32c54b16100?auto=format&fit=crop&w=1920&q=80',
-  mountains2: 'https://images.unsplash.com/photo-1505486173248-197f101f6b4d?auto=format&fit=crop&w=1920&q=80',
-  peak: 'https://images.unsplash.com/photo-1466690468488-763ee1537a64?auto=format&fit=crop&w=1920&q=80',
-  temple1: 'https://images.unsplash.com/photo-1620673306248-bad4dfe1e005?auto=format&fit=crop&w=1600&q=80',
-  temple2: 'https://images.unsplash.com/photo-1648450934224-2dfd28a9e316?auto=format&fit=crop&w=1600&q=80',
-  meditation: 'https://images.unsplash.com/photo-1660240141249-807c9731931e?auto=format&fit=crop&w=1200&q=80',
-  yoga: 'https://images.unsplash.com/photo-1712934665512-555960ea3680?auto=format&fit=crop&w=1200&q=80',
-  lotus: 'https://images.unsplash.com/photo-1616435577207-ca90abc6b732?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2OTV8MHwxfHNlYXJjaHwyfHxsb3R1cyUyMGZsb3dlcnxlbnwwfHx8fDE3ODI5NTg0Mjh8MA&ixlib=rb-4.1.0&q=85',
-  panch: 'https://images.unsplash.com/photo-1646815672058-c203442b9c0d?auto=format&fit=crop&w=1200&q=80',
-  reiki: 'https://images.unsplash.com/photo-1619136652739-98f01e200732?auto=format&fit=crop&w=1200&q=80',
+const PROGRAM_ICONS = {
+  'kundalini-meditation': Flame,
+  yoga: Wind,
+  'past-life-regression': Moon,
+  'panch-karma': Leaf,
+  moksha: Star,
+  'reiki-healing': Sparkles,
 }
+
+const ABOUT_CARD_ICONS = [Compass, Sun, Feather]
+const ABOUT_STAT_ICONS = [Sparkles, Star, Sun]
 
 // ============ LOADER ============
 function Loader({ onDone }) {
+  const { content } = useSiteContent()
   useEffect(() => {
     // Fallback: dismiss after 4.5s no matter what
     const t = setTimeout(onDone, 4500)
@@ -112,7 +108,7 @@ function Loader({ onDone }) {
         className="relative w-[min(55vw,400px)] aspect-square flex items-center justify-center"
       >
         <motion.img
-          src={IMG.logo}
+          src={content.logo}
           alt="Vishv Chetna Trust"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -211,6 +207,7 @@ function ScrollProgress() {
 
 // ============ NAVIGATION ============
 function Navigation() {
+  const { content } = useSiteContent()
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   useEffect(() => {
@@ -219,16 +216,7 @@ function Navigation() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const links = [
-    { label: 'About', href: '#about' },
-    { label: 'Programs', href: '#programs' },
-    { label: 'Chakras', href: '#chakras' },
-    { label: 'Journey', href: '#journey' },
-    { label: 'Meditate', href: '#meditate' },
-    { label: 'Gallery', href: '#gallery' },
-    { label: 'Events', href: '#events' },
-    { label: 'Contact', href: '#contact' },
-  ]
+  const links = content.nav?.links || []
 
   return (
     <motion.nav
@@ -242,7 +230,7 @@ function Navigation() {
       <div className="container flex items-center justify-between">
         <a href="#top" className="group">
           <div className="relative w-16 h-16 rounded-full bg-white p-2 shadow-lg group-hover:shadow-xl transition-all duration-300">
-            <img src={IMG.logo} alt="Vishv Chetna Trust" className="w-full h-full object-contain" />
+            <img src={content.logo} alt="Vishv Chetna Trust" className="w-full h-full object-contain" />
           </div>
         </a>
 
@@ -337,6 +325,9 @@ function Particles({ count = 40, color = '#C8A14A' }) {
 
 // ============ HERO ============
 function Hero() {
+  const { content } = useSiteContent()
+  const hero = content.hero
+
   const ref = useRef(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
   const y1 = useTransform(scrollYProgress, [0, 1], ['0%', '30%'])
@@ -359,7 +350,7 @@ function Hero() {
           <div
             className="absolute inset-0 w-full h-full bg-cover bg-center"
             style={{
-              backgroundImage: `url(${IMG.hero1})`,
+              backgroundImage: `url(${hero.background})`,
               transform: `translate3d(${mouse.x * -15}px, ${mouse.y * -10}px, 0) scale(1.08)`,
               transition: 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)',
             }}
@@ -387,7 +378,7 @@ function Hero() {
           transition={{ delay: 0.3, duration: 0.9, ease: 'easeOut' }}
           className="mb-8"
         >
-          <img src={IMG.logo} alt="Vishv Chetna Trust"
+          <img src={content.logo} alt="Vishv Chetna Trust"
             className="w-28 md:w-32 h-auto opacity-95"
             style={{ mixBlendMode: 'screen', filter: 'drop-shadow(0 0 30px rgba(200,161,74,0.6))' }} />
         </motion.div>
@@ -401,7 +392,7 @@ function Hero() {
         >
           <span className="h-px w-12 bg-gradient-to-r from-transparent to-gold" />
           <Sparkles className="w-3.5 h-3.5 text-gold" />
-          <span className="text-[11px] tracking-[0.5em] text-white font-semibold uppercase drop-shadow-lg">The Enlightened World</span>
+          <span className="text-[11px] tracking-[0.5em] text-white font-semibold uppercase drop-shadow-lg">{hero.eyebrow}</span>
           <Sparkles className="w-3.5 h-3.5 text-gold" />
           <span className="h-px w-12 bg-gradient-to-l from-transparent to-gold" />
         </motion.div>
@@ -416,11 +407,11 @@ function Hero() {
             style={{ textShadow: '0 4px 40px rgba(0,0,0,0.7), 0 2px 20px rgba(0,0,0,0.5)' }}
           >
             <span className="block" style={{ fontSize: 'clamp(3rem, 11vw, 10rem)', letterSpacing: '0.02em' }}>
-              AWAKEN
+              {hero.line1}
             </span>
             <span className="block font-serif-lux italic font-normal text-white drop-shadow-2xl mt-2"
               style={{ fontSize: 'clamp(2rem, 7vw, 6.5rem)', textShadow: '0 4px 30px rgba(0,0,0,0.8), 0 2px 15px rgba(0,0,0,0.6)' }}>
-              your inner
+              {hero.line2}
             </span>
             <motion.span
               initial={{ opacity: 0, scale: 0.92 }}
@@ -429,7 +420,7 @@ function Hero() {
               className="block font-display font-bold text-gold drop-shadow-2xl mt-1 leading-none"
               style={{ fontSize: 'clamp(2.2rem, 8vw, 8rem)', letterSpacing: '-0.02em', textShadow: '0 4px 30px rgba(0,0,0,0.7), 0 2px 15px rgba(184,147,93,0.5)' }}
             >
-              CONSCIOUSNESS
+              {hero.line3}
             </motion.span>
           </motion.h1>
 
@@ -451,7 +442,7 @@ function Hero() {
           transition={{ delay: 1.9, duration: 1 }}
           className="mt-10 max-w-2xl text-white/85 text-lg md:text-xl font-serif-lux italic leading-relaxed"
         >
-          Discover meditation, healing, yoga, and ancient wisdom — a sacred path to transform your life, from within.
+          {hero.subtitle}
         </motion.p>
 
         <motion.div
@@ -462,12 +453,12 @@ function Hero() {
         >
           <a href="#programs">
             <Button size="lg" className="magnetic-btn h-14 px-9 rounded-full gold-gradient text-navy font-semibold text-base glow-gold-strong hover:scale-[1.03] transition">
-              Explore Programs <ArrowRight className="ml-2 w-4 h-4" />
+              {hero.ctaPrimary} <ArrowRight className="ml-2 w-4 h-4" />
             </Button>
           </a>
           <a href="#donate">
             <Button size="lg" variant="outline" className="h-14 px-8 rounded-full border-gold/60 bg-white/10 backdrop-blur-xl text-white hover:bg-white/20 hover:border-gold font-semibold text-base">
-              <Heart className="mr-2 w-4 h-4" /> Donate
+              <Heart className="mr-2 w-4 h-4" /> {hero.ctaSecondary}
             </Button>
           </a>
         </motion.div>
@@ -490,7 +481,7 @@ function Hero() {
           >
             {[...Array(2)].map((_, k) => (
               <div key={k} className="flex gap-12 shrink-0">
-                {['Kundalini Yoga', 'Meditation', 'Reiki Healing', 'Panch Karma', 'Past Life Regression', 'Moksha', 'Ancient Wisdom', 'Ayurveda'].map((w) => (
+                {(hero.marquee || []).map((w) => (
                   <span key={w} className="font-display text-sm tracking-[0.35em] text-gold/70 uppercase flex items-center gap-12">
                     {w}
                     <span className="w-1 h-1 rounded-full bg-gold" />
@@ -564,17 +555,10 @@ function Reveal({ children, delay = 0, className = '' }) {
 
 // ============ ABOUT ============
 function About() {
-  const cards = [
-    { icon: Compass, title: 'Our Mission', text: 'To awaken humanity to its highest potential through ancient wisdom, meditation, and healing practices — one soul at a time.' },
-    { icon: Sun, title: 'Our Vision', text: 'An enlightened world where every being lives in harmony, guided by consciousness, love, and inner peace.' },
-    { icon: Feather, title: 'Our Values', text: 'Compassion, authenticity, sacred service, universal love, and unwavering devotion to truth and liberation.' },
-  ]
-
-  const stats = [
-    { number: '6+', label: 'Sacred Programs', icon: Sparkles },
-    { number: '∞', label: 'Potential to Transform', icon: Star },
-    { number: '24/7', label: 'Guidance Available', icon: Sun },
-  ]
+  const { content } = useSiteContent()
+  const about = content.about
+  const cards = (about.cards || []).map((c, i) => ({ ...c, icon: ABOUT_CARD_ICONS[i] || Compass }))
+  const stats = (about.stats || []).map((s, i) => ({ ...s, icon: ABOUT_STAT_ICONS[i] || Sparkles }))
 
   return (
     <section id="about" className="relative py-32 bg-gradient-to-b from-warmcream via-sand to-warmcream overflow-hidden">
@@ -589,21 +573,19 @@ function About() {
           <Reveal>
             <div className="inline-flex items-center gap-3 mb-6">
               <span className="h-px w-16 bg-gold" />
-              <span className="text-xs tracking-[0.3em] font-medium text-gold uppercase">About Us</span>
+              <span className="text-xs tracking-[0.3em] font-medium text-gold uppercase">{about.eyebrow}</span>
               <span className="h-px w-16 bg-gold" />
             </div>
           </Reveal>
           <Reveal delay={0.1}>
             <h2 className="font-display text-5xl md:text-7xl leading-[1.05] text-earth-dark mb-6">
-              Guiding souls toward
-              <span className="block font-serif-lux italic gold-text mt-2">divine awakening.</span>
+              {about.title}
+              <span className="block font-serif-lux italic gold-text mt-2">{about.titleAccent}</span>
             </h2>
           </Reveal>
           <Reveal delay={0.2}>
             <p className="text-earth-med text-xl leading-relaxed font-serif-lux max-w-3xl mx-auto">
-              Vishv Chetna Trust is a newly established sacred space dedicated to preserving ancient Indian wisdom and
-              sharing it with the world. Through meditation, yoga, healing, and timeless spiritual practices —
-              we help you rediscover the light that has always lived within you.
+              {about.body}
             </p>
           </Reveal>
         </div>
@@ -619,7 +601,7 @@ function About() {
               
               <div className="relative overflow-hidden rounded-3xl shadow-2xl group">
                 <motion.img
-                  src="/videos/yoga-guruji.png"
+                  src={about.portrait}
                   alt="Yoga Guruji"
                   className="w-full h-[620px] object-cover"
                   whileHover={{ scale: 1.05 }}
@@ -632,9 +614,9 @@ function About() {
                 {/* Overlay text */}
                 <div className="absolute bottom-8 left-8 right-8">
                   <div className="glass-natural rounded-2xl p-6 backdrop-blur-md">
-                    <div className="font-display text-sm tracking-[0.3em] text-gold mb-2">NEWLY ESTABLISHED</div>
+                    <div className="font-display text-sm tracking-[0.3em] text-gold mb-2">{about.portraitBadge}</div>
                     <div className="font-serif-lux italic text-2xl text-earth-dark leading-tight">
-                      A Sacred Space for<br />Your Spiritual Journey
+                      {about.portraitCaption}
                     </div>
                   </div>
                 </div>
@@ -651,8 +633,8 @@ function About() {
                     <Heart className="w-6 h-6 text-navy" />
                   </div>
                   <div>
-                    <div className="font-display text-2xl gold-text leading-none">NEW</div>
-                    <div className="text-xs tracking-[0.2em] text-earth-med uppercase mt-1">Journey</div>
+                    <div className="font-display text-2xl gold-text leading-none">{about.floatingLabel}</div>
+                    <div className="text-xs tracking-[0.2em] text-earth-med uppercase mt-1">{about.floatingSub}</div>
                   </div>
                 </div>
               </motion.div>
@@ -736,7 +718,7 @@ function About() {
               whileTap={{ scale: 0.98 }}
               className="inline-flex items-center gap-3 px-8 py-4 rounded-full gold-gradient text-navy font-display tracking-wider shadow-lg hover:shadow-2xl transition-all group"
             >
-              Explore Our Programs
+              {about.cta}
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </motion.a>
           </div>
@@ -748,14 +730,12 @@ function About() {
 
 // ============ PROGRAMS ============
 function Programs() {
-  const programs = [
-    { title: 'Kundalini Yoga Meditation', slug: 'kundalini-meditation', tag: 'Awakening', desc: 'Awaken the sacred serpent energy through breath, mantra, and ancient kriyas.', img: IMG.meditation, icon: Flame },
-    { title: 'Yoga', slug: 'yoga', tag: 'Body & Breath', desc: 'Timeless asanas that align body, breath, and consciousness in perfect harmony.', img: IMG.yoga, icon: Wind },
-    { title: 'Past Life Regression', slug: 'past-life-regression', tag: 'Soul Memory', desc: 'Journey beyond this lifetime to heal karmic imprints and rediscover your essence.', img: IMG.lotus, icon: Moon },
-    { title: 'Panch Karma & Naturopathy', slug: 'panch-karma', tag: 'Ayurveda', desc: 'Five sacred purifications that restore harmony between mind, body, and nature.', img: IMG.panch, icon: Leaf },
-    { title: 'Moksha', slug: 'moksha', tag: 'Liberation', desc: 'Dissolve the illusions of the ego and step into infinite, boundless awareness.', img: IMG.temple2, icon: Star },
-    { title: 'Reiki Healing', slug: 'reiki-healing', tag: 'Universal Energy', desc: 'Channel divine light and life-force to heal on every level — physical to soul.', img: IMG.reiki, icon: Sparkles },
-  ]
+  const { content } = useSiteContent()
+  const section = content.programsSection
+  const programs = (content.programs || []).map((p) => ({
+    ...p,
+    icon: PROGRAM_ICONS[p.slug] || Sparkles,
+  }))
 
   return (
     <section id="programs" className="relative py-32 navy-gradient overflow-hidden">
@@ -764,16 +744,16 @@ function Programs() {
 
       <div className="container relative">
         <div className="text-center max-w-3xl mx-auto mb-20">
-          <Reveal><SectionEyebrow>Sacred Programs</SectionEyebrow></Reveal>
+          <Reveal><SectionEyebrow>{section.eyebrow}</SectionEyebrow></Reveal>
           <Reveal delay={0.1}>
             <h2 className="font-display text-5xl md:text-6xl text-white leading-[1.05]">
-              Pathways to
-              <span className="block font-serif-lux italic gold-shimmer">inner transformation</span>
+              {section.title}
+              <span className="block font-serif-lux italic gold-shimmer">{section.titleAccent}</span>
             </h2>
           </Reveal>
           <Reveal delay={0.2}>
             <p className="mt-6 text-white/70 font-serif-lux text-lg">
-              Six timeless disciplines — each a doorway to the deepest truth of who you are.
+              {section.subtitle}
             </p>
           </Reveal>
         </div>
@@ -848,6 +828,8 @@ function ProgramCard({ title, tag, desc, img, icon: Icon, slug }) {
 
 // ============ 3D LOTUS SECTION ============
 function LotusSection() {
+  const { content } = useSiteContent()
+  const lotus = content.lotus
   const ref = useRef(null)
   const [mouse, setMouse] = useState({ x: 0, y: 0 })
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
@@ -867,22 +849,21 @@ function LotusSection() {
 
       <div className="container relative grid lg:grid-cols-2 gap-12 items-center">
         <div>
-          <Reveal><SectionEyebrow>Sacred Symbol</SectionEyebrow></Reveal>
+          <Reveal><SectionEyebrow>{lotus.eyebrow}</SectionEyebrow></Reveal>
           <Reveal delay={0.1}>
             <h2 className="font-display text-5xl md:text-6xl text-earth-dark leading-[1.05]">
-              The Lotus
-              <span className="block font-serif-lux italic gold-text">rises from the mud.</span>
+              {lotus.title}
+              <span className="block font-serif-lux italic gold-text">{lotus.titleAccent}</span>
             </h2>
           </Reveal>
           <Reveal delay={0.2}>
             <p className="mt-6 text-earth-med text-lg font-serif-lux leading-relaxed max-w-lg">
-              A thousand-petaled flower blooms within every soul. It is the eternal reminder that from darkness
-              rises the most exquisite light — a symbol of purity, rebirth, and spiritual enlightenment.
+              {lotus.body}
             </p>
           </Reveal>
           <Reveal delay={0.3}>
             <div className="mt-8 grid grid-cols-3 gap-4 max-w-md">
-              {['Purity','Rebirth','Enlightenment'].map((w) => (
+              {(lotus.tags || []).map((w) => (
                 <div key={w} className="glass-natural rounded-xl p-4 text-center border border-gold/25 shadow-sm">
                   <div className="font-serif-lux italic text-gold text-xl font-semibold">{w}</div>
                 </div>
@@ -919,7 +900,7 @@ function LotusSection() {
                 className="relative w-full h-full rounded-full overflow-hidden shadow-2xl"
               >
                 <img
-                  src="/videos/guru-ji.png"
+                  src={lotus.image}
                   alt="Guru Ji"
                   className="w-full h-full object-cover"
                   style={{
@@ -981,11 +962,13 @@ function Counter({ to, suffix = '+' }) {
 }
 
 function Stats() {
+  const { content } = useSiteContent()
+  const s = content.stats || {}
   const items = [
-    { n: 5000, label: 'People Guided', icon: Heart },
-    { n: 150, label: 'Meditation Sessions', icon: Circle },
-    { n: 15, label: 'Years of Experience', icon: Star },
-    { n: 40, label: 'Healing Camps', icon: Leaf },
+    { n: s.peopleGuided ?? 5000, label: 'People Guided', icon: Heart },
+    { n: s.sessions ?? 150, label: 'Meditation Sessions', icon: Circle },
+    { n: s.years ?? 15, label: 'Years of Experience', icon: Star },
+    { n: s.camps ?? 40, label: 'Healing Camps', icon: Leaf },
   ]
   return (
     <section className="relative py-24 bg-warmwhite">
@@ -1166,31 +1149,20 @@ function Meditate() {
 
 // ============ GALLERY ============
 function Gallery() {
-  const imgs = [
-    { src: IMG.temple1, h: 'h-72' },
-    { src: IMG.meditation, h: 'h-96' },
-    { src: IMG.mountains1, h: 'h-64' },
-    { src: IMG.yoga, h: 'h-80' },
-    { src: IMG.temple2, h: 'h-96' },
-    { src: IMG.lotus, h: 'h-72' },
-    { src: IMG.panch, h: 'h-64' },
-    { src: IMG.reiki, h: 'h-80' },
-    { src: IMG.peak, h: 'h-72' },
-    { src: IMG.hero2, h: 'h-80' },
-    { src: IMG.mountains2, h: 'h-64' },
-    { src: IMG.hero1, h: 'h-72' },
-  ]
+  const { content } = useSiteContent()
+  const g = content.gallery
+  const imgs = g.images || []
   const [lightbox, setLightbox] = useState(null)
 
   return (
     <section id="gallery" className="relative py-32 bg-warmwhite">
       <div className="container">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <Reveal><SectionEyebrow>Sacred Moments</SectionEyebrow></Reveal>
+          <Reveal><SectionEyebrow>{g.eyebrow}</SectionEyebrow></Reveal>
           <Reveal delay={0.1}>
             <h2 className="font-display text-5xl md:text-6xl text-navy leading-[1.05]">
-              Glimpses of
-              <span className="block font-serif-lux italic gold-text">the divine</span>
+              {g.title}
+              <span className="block font-serif-lux italic gold-text">{g.titleAccent}</span>
             </h2>
           </Reveal>
         </div>
@@ -1248,22 +1220,24 @@ function Gallery() {
 
 // ============ VIDEO / IMMERSION ============
 function Immersion() {
+  const { content } = useSiteContent()
+  const im = content.immersion
   return (
     <section className="relative h-[70vh] overflow-hidden">
       <div
         className="absolute inset-0 bg-cover bg-center bg-fixed"
-        style={{ backgroundImage: `url(${IMG.temple2})` }}
+        style={{ backgroundImage: `url(${im.background})` }}
       />
       <div className="absolute inset-0 bg-gradient-to-b from-navy/60 via-navy/40 to-navy/80" />
       <Particles count={40} color="#F5DC96" />
 
       <div className="container relative h-full flex flex-col items-center justify-center text-center text-white">
-        <Reveal><SectionEyebrow>Immerse</SectionEyebrow></Reveal>
+        <Reveal><SectionEyebrow>{im.eyebrow}</SectionEyebrow></Reveal>
         <Reveal delay={0.1}>
           <h2 className="font-display text-5xl md:text-7xl leading-[1] max-w-4xl">
-            <span className="font-serif-lux italic gold-shimmer">Silence</span>
-            <span className="block">is the language</span>
-            <span className="font-serif-lux italic">of the divine.</span>
+            <span className="font-serif-lux italic gold-shimmer">{im.line1}</span>
+            <span className="block">{im.line2}</span>
+            <span className="font-serif-lux italic">{im.line3}</span>
           </h2>
         </Reveal>
         <Reveal delay={0.3}>
@@ -1281,21 +1255,19 @@ function Immersion() {
 
 // ============ EVENTS ============
 function Events() {
-  const events = [
-    { title: 'Kundalini Awakening Retreat', date: '2025-07-15', location: 'Rishikesh, India', img: IMG.meditation },
-    { title: 'Full Moon Meditation Circle', date: '2025-06-22', location: 'Live Online', img: IMG.lotus },
-    { title: 'Ayurveda & Panchakarma Camp', date: '2025-08-05', location: 'Kerala, India', img: IMG.panch },
-  ]
+  const { content } = useSiteContent()
+  const events = content.events || []
+  const es = content.eventsSection || {}
   return (
     <section id="events" className="relative py-32 bg-navy overflow-hidden">
       <div className="absolute inset-0 opacity-30 noise" />
       <div className="container relative">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <Reveal><SectionEyebrow>Upcoming Events</SectionEyebrow></Reveal>
+          <Reveal><SectionEyebrow>{es.eyebrow}</SectionEyebrow></Reveal>
           <Reveal delay={0.1}>
             <h2 className="font-display text-5xl md:text-6xl text-white leading-[1.05]">
-              Gather in
-              <span className="block font-serif-lux italic gold-shimmer">sacred presence</span>
+              {es.title}
+              <span className="block font-serif-lux italic gold-shimmer">{es.titleAccent}</span>
             </h2>
           </Reveal>
         </div>
@@ -1358,9 +1330,11 @@ function EventCard({ title, date, location, img }) {
 
 // ============ DONATION ============
 function Donate() {
-  const [amount, setAmount] = useState(1100)
-  const goal = 500000
-  const raised = 342750
+  const { content } = useSiteContent()
+  const d = content.donate
+  const [amount, setAmount] = useState(d.amounts?.[1] || 1100)
+  const goal = d.goal
+  const raised = d.raised
   const pct = Math.min((raised / goal) * 100, 100)
 
   const handleDonate = async () => {
@@ -1382,17 +1356,16 @@ function Donate() {
         style={{ background: 'radial-gradient(ellipse at bottom left, rgba(200,161,74,0.2), transparent 60%)' }} />
       <div className="container relative grid lg:grid-cols-2 gap-16 items-center">
         <div>
-          <Reveal><SectionEyebrow>Sacred Giving</SectionEyebrow></Reveal>
+          <Reveal><SectionEyebrow>{d.eyebrow}</SectionEyebrow></Reveal>
           <Reveal delay={0.1}>
             <h2 className="font-display text-5xl md:text-6xl text-navy leading-[1.05]">
-              Be a light
-              <span className="block font-serif-lux italic gold-text">for another.</span>
+              {d.title}
+              <span className="block font-serif-lux italic gold-text">{d.titleAccent}</span>
             </h2>
           </Reveal>
           <Reveal delay={0.2}>
             <p className="mt-6 text-navy/70 font-serif-lux text-lg leading-relaxed max-w-lg">
-              Every offering — no matter its size — becomes a candle in another seeker's darkness.
-              Your kindness fuels free camps, retreats, and the sharing of ancient wisdom with those who cannot pay.
+              {d.body}
             </p>
           </Reveal>
 
@@ -1421,11 +1394,11 @@ function Donate() {
             <div className="relative glass rounded-3xl p-8 md:p-10 shadow-2xl border border-gold/20">
               <div className="text-center mb-6">
                 <LotusIcon className="w-10 h-10 text-gold mx-auto mb-3" />
-                <div className="font-display text-2xl text-navy tracking-widest">OFFER YOUR SEVA</div>
-                <div className="font-serif-lux italic text-navy/60 mt-1">Choose an amount that stirs your heart</div>
+                <div className="font-display text-2xl text-navy tracking-widest">{d.cardTitle}</div>
+                <div className="font-serif-lux italic text-navy/60 mt-1">{d.cardSubtitle}</div>
               </div>
               <div className="grid grid-cols-3 gap-3 mb-6">
-                {[501, 1100, 2100, 5100, 11000, 21000].map(a => (
+                {(d.amounts || []).map(a => (
                   <button
                     key={a}
                     onClick={() => setAmount(a)}
@@ -1445,7 +1418,7 @@ function Donate() {
                 />
               </div>
               <Button onClick={handleDonate} className="w-full h-14 rounded-full gold-gradient text-navy font-semibold text-base glow-gold-strong hover:scale-[1.02] transition">
-                Donate Now <Heart className="ml-2 w-4 h-4" />
+                {d.cta} <Heart className="ml-2 w-4 h-4" />
               </Button>
               <div className="mt-6 grid grid-cols-3 gap-3 text-center">
                 {['UPI', 'QR Code', 'Card'].map(m => (
@@ -1462,29 +1435,28 @@ function Donate() {
 
 // ============ TESTIMONIALS ============
 function Testimonials() {
-  const items = [
-    { name: 'Ananya Sharma', role: 'Delhi', text: 'A single meditation retreat here rewrote the story I had been telling myself for 30 years. I found silence — and in it, my true self.' },
-    { name: 'Marcus Bell', role: 'London', text: 'The Kundalini sessions cracked something open in me. Words fail. I only know I am no longer the person who arrived.' },
-    { name: 'Priya Nair', role: 'Bangalore', text: 'Their Panchakarma healed my body when medicine could not. But more than that — they healed the ache in my soul.' },
-    { name: 'Alina Rossi', role: 'Milan', text: 'The most sacred space I have ever entered. Every teacher, every candle, every silence — divine.' },
-    { name: 'Rohit Verma', role: 'Mumbai', text: 'I came searching for peace. I left carrying it inside me — like a lamp that will never go out.' },
-  ]
+  const { content } = useSiteContent()
+  const items = content.testimonials || []
+  const ts = content.testimonialsSection || {}
   const [idx, setIdx] = useState(0)
   useEffect(() => {
+    if (!items.length) return
     const id = setInterval(() => setIdx(i => (i + 1) % items.length), 6000)
     return () => clearInterval(id)
   }, [items.length])
+
+  if (!items.length) return null
 
   return (
     <section className="relative py-32 bg-navy overflow-hidden">
       <div className="absolute inset-0 starfield opacity-30" />
       <div className="container relative">
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <Reveal><SectionEyebrow>Voices of the Awakened</SectionEyebrow></Reveal>
+          <Reveal><SectionEyebrow>{ts.eyebrow}</SectionEyebrow></Reveal>
           <Reveal delay={0.1}>
             <h2 className="font-display text-5xl md:text-6xl text-white leading-[1.05]">
-              Words from
-              <span className="block font-serif-lux italic gold-shimmer">souls transformed</span>
+              {ts.title}
+              <span className="block font-serif-lux italic gold-shimmer">{ts.titleAccent}</span>
             </h2>
           </Reveal>
         </div>
@@ -1533,6 +1505,8 @@ function Testimonials() {
 
 // ============ CONTACT ============
 function Contact() {
+  const { content } = useSiteContent()
+  const c = content.contact
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' })
   const [loading, setLoading] = useState(false)
 
@@ -1557,24 +1531,24 @@ function Contact() {
     <section id="contact" className="relative py-32 bg-warmwhite overflow-hidden">
       <div className="container relative grid lg:grid-cols-2 gap-16">
         <div>
-          <Reveal><SectionEyebrow>Connect With Us</SectionEyebrow></Reveal>
+          <Reveal><SectionEyebrow>{c.eyebrow}</SectionEyebrow></Reveal>
           <Reveal delay={0.1}>
             <h2 className="font-display text-5xl md:text-6xl text-navy leading-[1.05]">
-              A message,
-              <span className="block font-serif-lux italic gold-text">a whisper, a hello.</span>
+              {c.title}
+              <span className="block font-serif-lux italic gold-text">{c.titleAccent}</span>
             </h2>
           </Reveal>
           <Reveal delay={0.2}>
             <p className="mt-6 text-navy/70 font-serif-lux text-lg">
-              Whether you seek guidance, community, or simply wish to share your journey — we listen with an open heart.
+              {c.body}
             </p>
           </Reveal>
 
           <div className="mt-10 space-y-4">
             {[
-              { icon: MapPin, label: 'Rishikesh, Uttarakhand — India' },
-              { icon: Mail, label: 'namaste@vishvchetna.org' },
-              { icon: Phone, label: '+91 98765 43210' },
+              { icon: MapPin, label: c.address },
+              { icon: Mail, label: c.email },
+              { icon: Phone, label: c.phone },
             ].map(it => (
               <Reveal key={it.label}>
                 <div className="flex items-center gap-4 glass rounded-2xl p-5 hover:glow-gold transition group">
@@ -1603,8 +1577,8 @@ function Contact() {
         <Reveal delay={0.2}>
           <form onSubmit={submit} className="relative glass rounded-3xl p-8 md:p-10 border border-gold/25 shadow-2xl">
             <div className="absolute -inset-2 rounded-3xl radial-gold blur-2xl opacity-40 -z-10" />
-            <div className="font-display text-2xl text-navy tracking-widest mb-1">SEND A MESSAGE</div>
-            <div className="font-serif-lux italic text-navy/60 mb-8">We'll reply within 24 hours</div>
+            <div className="font-display text-2xl text-navy tracking-widest mb-1">{c.formTitle}</div>
+            <div className="font-serif-lux italic text-navy/60 mb-8">{c.formSubtitle}</div>
             <div className="space-y-4">
               <Input placeholder="Your Name" required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
                 className="h-14 rounded-xl bg-white/60 border-gold/25 focus:border-gold" />
@@ -1630,6 +1604,8 @@ function Contact() {
 
 // ============ FOOTER ============
 function Footer() {
+  const { content } = useSiteContent()
+  const f = content.footer
   const [email, setEmail] = useState('')
   const subscribe = async (e) => {
     e.preventDefault()
@@ -1656,16 +1632,15 @@ function Footer() {
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-6">
               <div className="relative w-14 h-14 rounded-full bg-warmwhite p-2 shadow-lg">
-                <img src={IMG.logo} alt="Vishv Chetna Trust" className="w-full h-full object-contain rounded-full" />
+                <img src={content.logo} alt="Vishv Chetna Trust" className="w-full h-full object-contain rounded-full" />
               </div>
               <div>
-                <div className="font-display text-white tracking-[0.25em]">VISHV CHETNA TRUST</div>
-                <div className="font-serif-lux italic text-gold text-sm">The Enlightened World</div>
+                <div className="font-display text-white tracking-[0.25em]">{f.brand}</div>
+                <div className="font-serif-lux italic text-gold text-sm">{f.tagline}</div>
               </div>
             </div>
             <p className="font-serif-lux text-white/60 text-lg max-w-md leading-relaxed">
-              A sacred sanctuary devoted to guiding souls toward the eternal light of self-realization —
-              through timeless wisdom, healing, and love.
+              {f.body}
             </p>
             <form onSubmit={subscribe} className="mt-8 flex items-center gap-2 max-w-md">
               <Input type="email" required placeholder="Your email for sacred wisdom" value={email} onChange={e => setEmail(e.target.value)}
@@ -1688,8 +1663,8 @@ function Footer() {
           <div>
             <div className="font-display text-white text-sm tracking-widest mb-5">PROGRAMS</div>
             <ul className="space-y-2.5 font-body text-white/60">
-              {['Kundalini Yoga', 'Yoga', 'Past Life Regression', 'Panch Karma', 'Moksha', 'Reiki Healing'].map(l => (
-                <li key={l}><span className="hover:text-gold transition cursor-pointer">{l}</span></li>
+              {(content.programs || []).map(l => (
+                <li key={l.slug}><a href={`/programs/${l.slug}`} className="hover:text-gold transition">{l.title}</a></li>
               ))}
             </ul>
           </div>
@@ -1707,8 +1682,8 @@ function Footer() {
         </div>
 
         <div className="mt-12 text-center">
-          <div className="font-serif-lux italic text-gold/60 text-lg">"असतो मा सद्गमय · तमसो मा ज्योतिर्गमय · मृत्योर्मामृतं गमय"</div>
-          <div className="text-white/40 text-xs mt-1 tracking-widest">FROM UNREAL LEAD ME TO THE REAL · FROM DARKNESS LEAD ME TO LIGHT · FROM DEATH LEAD ME TO IMMORTALITY</div>
+          <div className="font-serif-lux italic text-gold/60 text-lg">{f.mantra}</div>
+          <div className="text-white/40 text-xs mt-1 tracking-widest">{f.mantraEn}</div>
         </div>
       </div>
     </footer>
@@ -1792,27 +1767,29 @@ function App() {
   }, [loading])
 
   return (
-    <main className="relative bg-warmwhite text-navy min-h-screen">
-      <AnimatePresence>{loading && <Loader onDone={() => setLoading(false)} />}</AnimatePresence>
-      <CustomCursor />
-      <ScrollProgress />
-      <Navigation />
-      <Hero />
-      <About />
-      <Programs />
-      <LotusSection />
-      <ChakraWheel />
-      <Stats />
-      <Timeline />
-      <Meditate />
-      <Gallery />
-      <Immersion />
-      <Events />
-      <Donate />
-      <Testimonials />
-      <Contact />
-      <Footer />
-    </main>
+    <SiteContentProvider>
+      <main className="relative bg-warmwhite text-navy min-h-screen">
+        <AnimatePresence>{loading && <Loader onDone={() => setLoading(false)} />}</AnimatePresence>
+        <CustomCursor />
+        <ScrollProgress />
+        <Navigation />
+        <Hero />
+        <About />
+        <Programs />
+        <LotusSection />
+        <ChakraWheel />
+        <Stats />
+        <Timeline />
+        <Meditate />
+        <Gallery />
+        <Immersion />
+        <Events />
+        <Donate />
+        <Testimonials />
+        <Contact />
+        <Footer />
+      </main>
+    </SiteContentProvider>
   )
 }
 
