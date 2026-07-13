@@ -164,7 +164,9 @@ function VideoField({ label, value, onChange }) {
   return (
     <div className="mb-6 p-4 rounded-2xl border border-[#B8935D]/25 bg-white/60">
       <div className="text-xs tracking-widest uppercase text-[#6B5D4F] mb-3">{label}</div>
-      <p className="text-xs text-[#6B5D4F] mb-3">Paste a YouTube, Vimeo, or direct video link — or upload an MP4/WebM.</p>
+      <p className="text-xs text-[#6B5D4F] mb-3">
+        Paste a full YouTube link (watch, youtu.be, shorts, or share URL), Vimeo, or a direct video file — or upload MP4/WebM.
+      </p>
       {value ? (
         <div className="mb-3 rounded-xl bg-[#132238] text-white/80 text-xs p-3 break-all border border-[#B8935D]/20">
           {value}
